@@ -9,7 +9,6 @@ import net.didion.jwnl.JWNLException;
 import net.didion.jwnl.data.IndexWord;
 import net.didion.jwnl.data.POS;
 import net.didion.jwnl.data.PointerType;
-import net.didion.jwnl.data.Synset;
 import net.didion.jwnl.data.relationship.Relationship;
 import pup.thesis.helper.JwnlHelper;
 import pup.thesis.helper.MysqlHelper;
@@ -23,6 +22,7 @@ public abstract class ReinforcementLearning {
 	
 	/**
 	 * 
+	 * Learn the unknown word
 	 * 
 	 * @param words
 	 * @return
@@ -55,6 +55,8 @@ public abstract class ReinforcementLearning {
 	
 	/**
 	 * 
+	 * returns the policy with the lowest value of reward
+	 * 
 	 * @param policies
 	 * @return
 	 */
@@ -85,16 +87,24 @@ public abstract class ReinforcementLearning {
 	
 	/**
 	 * 
+	 * gets all the known_words in the database
+	 * and return it as a Arraylist of RelatedWord
+	 * 
 	 * @param set
 	 * @throws SQLException
 	 * @return
 	 */
-	public ArrayList<RelatedWord> iterateInDb() throws SQLException {
+	public ArrayList<RelatedWord> iterateInDb(String type) throws SQLException {
 		
 		ArrayList<RelatedWord> listRelated = new ArrayList<RelatedWord>();
+		ResultSet set = null;
 		helper = new JwnlHelper();
 		sqlHelper = new MysqlHelper();
-		ResultSet set = sqlHelper.executeQuery("SELECT * FROM known_words");
+		if(type.isEmpty()) 
+			set = sqlHelper.executeQuery("SELECT * FROM known_words");
+		else
+			set = sqlHelper.executeQuery("SELECT * FROM known_words WHERE pos_tag like '" + type + "'");
+		
 		
 		while(set.next()) {
 			RelatedWord rlWord = new RelatedWord();
@@ -112,6 +122,9 @@ public abstract class ReinforcementLearning {
 	
 	/**
 	 * 
+	 * Gets the depth of the relationship between
+	 * the IndexWord to the words in the list
+	 * of known_words
 	 * 
 	 * @param word
 	 * @return
@@ -128,7 +141,7 @@ public abstract class ReinforcementLearning {
 		int r = 0;
 		
 		try {
-			ArrayList<RelatedWord> words = iterateInDb();
+			ArrayList<RelatedWord> words = iterateInDb("");
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -140,6 +153,8 @@ public abstract class ReinforcementLearning {
 	
 	/**
 	 * 
+	 * Returns the Arraylist of unknown words
+	 * out of the ArrayList<RelatedWord> sentence
 	 * 
 	 * @param sentence
 	 * @return
@@ -149,7 +164,7 @@ public abstract class ReinforcementLearning {
 		
 		ArrayList<RelatedWord> unknown = new ArrayList<RelatedWord>();
 		
-		ArrayList<RelatedWord> kWords = iterateInDb();
+		ArrayList<RelatedWord> kWords = iterateInDb("");
 		
 		boolean flag = false;
 		
@@ -181,6 +196,8 @@ public abstract class ReinforcementLearning {
 	
 	/**
 	 * 
+	 * gets the depth of relationship between the ArrayList<RelatedWord> word
+	 * to the list of known_words in the database
 	 * 
 	 * @param word
 	 * @return
@@ -194,15 +211,17 @@ public abstract class ReinforcementLearning {
 		
 		ArrayList<ArrayList<Policy>> listPolicy = new ArrayList<ArrayList<Policy>>();
 		
+		PointerType type;
+		
 		try {
-			ArrayList<RelatedWord> kWords = iterateInDb();
-			
 			Iterator<RelatedWord> i = word.iterator();
 			
 			while(i.hasNext()) {
 				ArrayList<Policy> p = new ArrayList<Policy>();
-				Iterator<RelatedWord> i2 = kWords.iterator();
 				RelatedWord w = i.next();
+				type = helper.identifyPointerType(w.getTag());
+				ArrayList<RelatedWord> kWords = iterateInDb(helper.getPOS(w.getTag()));
+				Iterator<RelatedWord> i2 = kWords.iterator();
 				while(i2.hasNext()) {
 					RelatedWord w2 = i2.next();
 					IndexWord _w = helper.convertToIndexWord(w);
@@ -210,7 +229,7 @@ public abstract class ReinforcementLearning {
 					Policy _p = new Policy();
 					
 					try {
-						Relationship r = helper.getDepthOfRelationship(_w.getSenses(), _w2.getSenses(), PointerType.HYPERNYM);
+						Relationship r = helper.getDepthOfRelationship(_w.getSenses(), _w2.getSenses(), type);
 					
 						_p.setInitState(w);
 						_p.setEndState(w2);
@@ -243,6 +262,7 @@ public abstract class ReinforcementLearning {
 	
 	/**
 	 * 
+	 * Self-explanatory
 	 * 
 	 * @param word
 	 * @param synonym
