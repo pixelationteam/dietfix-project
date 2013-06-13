@@ -4,15 +4,13 @@
  */
 package pup.thesis.server;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
-
 import pup.thesis.knowledgebase.KBase;
 import pup.thesis.logging.App;
 import pup.thesis.nlg.TextGenerator;
 import pup.thesis.nlu.CoreParser;
 import pup.thesis.nlu.FirstOrderPredicateLogic;
+import pup.thesis.nlu.NoiseDetector;
+import pup.thesis.nlu.WordSynonym;
 
 /**
  *
@@ -23,10 +21,15 @@ public class DietfixServer {
     private static TextGenerator textgen = null;
     private static KBase kbase = null;
     private static FirstOrderPredicateLogic fopl = null;
+    private static NoiseDetector noiseDetect = null;
+    private static WordSynonym wordSynonym = null;
+
     private static void init(){
         App.log("Dietfixser:21", "Starting server.");
-        App.log("Loading Parser..");
+        App.log("Loading Modules Needed for NLU..");
         parser=new CoreParser();
+        noiseDetect = new NoiseDetector();
+        wordSynonym = new WordSynonym();
         App.log("Loading Text Generator..");
         textgen = new TextGenerator();
         App.log("Loading Knowledge Bases..");
@@ -45,6 +48,14 @@ public class DietfixServer {
     public static boolean isRunning(){
         return parser!=null;
     	//return true;
+    }
+    
+    public static WordSynonym getWordSynonym() {
+    	return wordSynonym;
+    }
+    
+    public static NoiseDetector getNoiseDetector() {
+    	return noiseDetect;
     }
     
     public static CoreParser getParser(){
