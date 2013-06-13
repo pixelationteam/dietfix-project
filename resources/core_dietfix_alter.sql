@@ -1,4 +1,6 @@
 --Dietfix.known_words--
+--06/14/2013
+--PCV
 INSERT INTO known_words values(null, 'be', 'VB', 0);
 INSERT INTO known_words values(null, 'have', 'VB', 1);
 INSERT INTO known_words values(null, 'do', 'VB', 2);
