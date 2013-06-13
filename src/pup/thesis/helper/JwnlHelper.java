@@ -118,7 +118,7 @@ public class JwnlHelper {
 	public PointerType identifyPointerType(POS pos) {
 		PointerType pointer = null;
 		
-		if(pos.equals(POS.VERB) || pos.equals(POS.NOUN)) {
+		if(pos.equals(POS.VERB) || pos.equals(POS.NOUN) || pos.equals(POS.ADVERB)) {
 			pointer =  PointerType.HYPERNYM;
 		}
 		else if(pos.equals(POS.ADJECTIVE)) {
@@ -226,6 +226,7 @@ public class JwnlHelper {
 	
 	/**
 	 * 
+	 * Returns the chain of relationship
 	 * 
 	 * @param r
 	 * @return
