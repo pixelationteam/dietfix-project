@@ -39,23 +39,10 @@ public class WordSynonym extends ReinforcementLearning {
 	private MysqlHelper sqlHelper;
 	private Log log;
 	
-	
-	public boolean startTranslationOfWords(ArrayList<RelatedWord> sentence) {
-		
-		
-		
-		return true;
-	}
-	
-	public boolean learnWord(ArrayList<RelatedWord> word) {
-		
-		
-		
-		return true;
-	}
-	
 	/**
 	 * 
+	 * Checks whether the word exist in the list of known_words
+	 * in the database
 	 * 
 	 * @param word
 	 * @return
@@ -65,7 +52,7 @@ public class WordSynonym extends ReinforcementLearning {
 		
 		ArrayList<RelatedWord> kWords = new ArrayList<RelatedWord>();
 		
-		kWords = iterateInDb();
+		kWords = iterateInDb("");
 		
 		Iterator<RelatedWord> i = kWords.iterator();
 		
@@ -86,6 +73,8 @@ public class WordSynonym extends ReinforcementLearning {
 	
 	/**
 	 * 
+	 * Converts the Arraylist of synset to Arraylist of String
+	 * 
 	 * @param sets
 	 * @return
 	 */
@@ -105,24 +94,5 @@ public class WordSynonym extends ReinforcementLearning {
 		
 		return synsets;
 	}
-	
-	/**
-	 * 
-	 * 
-	 * @param word
-	 * @return
-	 * @throws SQLException
-	 */
-	public boolean updateKnownWords(RelatedWord word) throws SQLException {
-		
-		sqlHelper = new MysqlHelper();
-		
-		String query = "INSERT INTO known_words VALUES(" +
-				"null, " + word.getLabel() + ", " + word.getTag() + ", " + word.getAction() + ")" ;
-		
-		return (sqlHelper.updateDb(query)) ? true : false;
-	}
-	
-	
 	
 }

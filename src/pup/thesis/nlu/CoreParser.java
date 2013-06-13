@@ -42,6 +42,8 @@ public class CoreParser {
 	}
 	/**
 	 * 
+	 * Get the tokens out of the parsed tree
+	 * 
 	 * @param input
 	 * @return
 	 */
@@ -55,6 +57,8 @@ public class CoreParser {
 	}
 	
 	/**
+	 * 
+	 * Gets the Part-of-speech tag of each word
 	 * 
 	 * @param input
 	 * @return
@@ -70,8 +74,10 @@ public class CoreParser {
 	
 	/**
 	 * 
+	 * Gets the parse tree generated in the given String
+	 * 
 	 * @param input
-	 * @return
+	 * @return Tree
 	 */
 	public Tree getParseTree(String input) {
 		Tree parseTree = null;
@@ -81,6 +87,13 @@ public class CoreParser {
 		return parseTree;
 	}
 	
+	/**
+	 * 
+	 * Gets the lemma(base form) of each word in the string given
+	 * 
+	 * @param input
+	 * @return
+	 */
 	public ArrayList<String> getLemma(String input) {
 		ArrayList<String> lemma = new ArrayList<String>();
 		
@@ -98,18 +111,6 @@ public class CoreParser {
 		GrammaticalStructureFactory gsf = tlp.grammaticalStructureFactory();
 		GrammaticalStructure gs = gsf.newGrammaticalStructure(parseTree);
 		return gs.typedDependenciesCCprocessed();
-	}
-	/**
-	 * 
-	 * @param validateInput
-	 * @return
-	 */
-	public boolean isValid(String validateInput)
-	{
-		boolean flag = true;
-		
-		
-		return flag;
 	}
 	
 }
