@@ -10,7 +10,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.jdt.internal.compiler.apt.model.Factory;
 import org.jooq.Condition;
 import org.jooq.DSLContext;
 import org.jooq.Record;
@@ -37,8 +36,7 @@ import pup.thesis.util.mysql.DBObject;
 
 public class Dietitian extends Expert{
 
-	DSLContext foodquerier,dietfixquerier;
-	Connection dietfixcon;
+	DSLContext foodquerier;
 	public Dietitian( ClientData cdata) throws ClassNotFoundException, InstantiationException, IllegalAccessException, SQLException {
 		super(Experts.DIETITIAN, cdata);
 		// TODO Auto-generated constructor stub
@@ -49,9 +47,7 @@ public class Dietitian extends Expert{
 		InstantiationException, IllegalAccessException, SQLException {
 		// TODO Auto-generated method stub
 		Connection foodcon = MysqlHelper.createFoodDBConnection(this.getClientData());
-		dietfixcon = MysqlHelper.createDietfixConnection(this.getClientData());
 		foodquerier = DSL.using(foodcon, SQLDialect.MYSQL);
-		dietfixquerier = DSL.using(dietfixcon, SQLDialect.MYSQL);
 	}
 	
 	public List<FoodCategory> getFoodCategories() throws SQLException{
@@ -98,70 +94,8 @@ public class Dietitian extends Expert{
 		return ret;		
 	}
 	
-	@Override
-	AnswerData getAnswerData(int id) throws SQLException, ClassNotFoundException{
-		String query1 = "select AnsObj from dietfix_ans where AnsID = "+id;
-		AnswerData ret = null;
-		PreparedStatement statement1 = dietfixcon.prepareStatement(query1);
-		ResultSet resultSet = statement1.executeQuery();
-		if (resultSet.next()) {
-			// Object x=resultSet.getObject("AnsDesc");
-			try {
-				InputStream is = resultSet.getBlob("AnsObj")
-						.getBinaryStream();
-				ObjectInputStream ois;
 
-				ois = new ObjectInputStream(is);
-
-				Object x = ois.readObject();
-				ret = (AnswerData) x;
-				
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-		else{
-			throw new IllegalArgumentException();
-		}
-		return ret;
-	}
-	
-	@Override
-	public List<ExpertAnswer> getAnswers(List<TypedDep> tds){
-		ArrayList<ExpertAnswer> tdset = new ArrayList<ExpertAnswer>();
-		assets.dietfix.Tables DIETFIX = new assets.dietfix.Tables(); 
-		//Result<Record> rec =  dietfixquerier.fetch("select AnsID,AnsExpert,AnsDesc from dietfix_ans");
-		StringBuilder sb = new StringBuilder("");
-		for(TypedDep ea : tds){
-			
-			if(ea.getActions()!=null)
-			for(String str : ea.getActions()){
-				sb.append("\\\\[").append(str).append("\\\\]").append("|");
-			}
-		}
-		if(sb.length()>0){
-			sb.deleteCharAt(sb.length()-1);
-		}
-		Condition regex = DSL.condition("{0} REGEXP {1}", 
-                DIETFIX.DIETFIX_ANS.ANSDESC,
-                DSL.val(sb.toString()));
-		SelectConditionStep<Record3<Integer, DietfixAnsAnsexpert, String>> rq = dietfixquerier.select(DIETFIX.DIETFIX_ANS.ANSID,DIETFIX.DIETFIX_ANS.ANSEXPERT,DIETFIX.DIETFIX_ANS.ANSDESC)
-				.from(DIETFIX.DIETFIX_ANS)
-				.where(regex);
-	
-		Result<Record> rec1 =  dietfixquerier.fetch(rq.getSQL(true));
-		for(Record resrec : rec1){
-			String expertstr = (String) resrec.getValue(DIETFIX.DIETFIX_ANS.ANSEXPERT.getName());
-			tdset.add(new ExpertAnswer(resrec.getValue(DIETFIX.DIETFIX_ANS.ANSID),resrec.getValue(DIETFIX.DIETFIX_ANS.ANSDESC),Experts.valueOf(expertstr),this));
-		}
-		App.log("Dietitian[Query]:",rq.getSQL(true));
-		return tdset;
-	}
-
-	
-	
-	
+		
 	
 	
 	

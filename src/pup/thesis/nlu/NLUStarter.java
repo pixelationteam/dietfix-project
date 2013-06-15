@@ -21,7 +21,7 @@ public class NLUStarter {
 	
 	public static void main(String args[]) {
 		NLUStarter start = new NLUStarter();
-		start.startNLUModule("What should I run?");
+		start.startNLUModule("What to eat if I am losing blood?");
 	}
 	
 	/**

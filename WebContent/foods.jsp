@@ -9,7 +9,6 @@
 <%@page import="pup.thesis.server.FoodsPage"%>
 <%@page import="pup.thesis.server.AdminManager"%>
 <%
-
 	if(!DietfixServer.isRunning()){
 		DietfixServer.start();
 	}
@@ -26,10 +25,7 @@
         }
         return;
     }
-    
-    
-    
-    %>
+%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>

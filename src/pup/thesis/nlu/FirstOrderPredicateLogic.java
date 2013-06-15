@@ -1,6 +1,7 @@
 package pup.thesis.nlu;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.drools.runtime.StatefulKnowledgeSession;
@@ -15,37 +16,40 @@ import pup.thesis.server.DietfixServer;
 
 public class FirstOrderPredicateLogic {
 
-	
-	public List<TypedDep> parseDeps(List<TypedDependency> tdeps ){
-		if(!DietfixServer.isRunning()){
-			App.log("FOPL:","Server is not running");
+	public List<TypedDep> parseDeps(List<TypedDependency> tdeps) {
+		if (!DietfixServer.isRunning()) {
+			App.log("FOPL:", "Server is not running");
 			return null;
 		}
-		StatefulKnowledgeSession ksession = DietfixServer.getKBase().getFOLKBase().newStatefulKnowledgeSession();
+		App.log("");
+		App.log("");
+		App.log("");
+		App.log("<<<===================== FIRST ORDER LOGIC =========================>>>");
+		StatefulKnowledgeSession ksession = DietfixServer.getKBase()
+				.getFOLKBase().newStatefulKnowledgeSession();
 		ArrayList<TypedDep> retdeps = new ArrayList<TypedDep>();
-			for(TypedDependency tddd:tdeps){
-				//TypedDep stdep = new TypedDep(tddd.reln().toString(),new Word(tddd.dep().index(),tddd.dep().label().tag(),tddd.dep().value()),new Word(tddd.gov().index(),tddd.gov().label().tag(),tddd.gov().value()));
-				TypedDep stdep = new TypedDep(tddd);
-				retdeps.add(stdep);
-				ksession.insert(stdep);
-				App.log(tddd+":"+stdep.toString());
-				
+		for (TypedDependency tddd : tdeps) {
+			// TypedDep stdep = new TypedDep(tddd.reln().toString(),new
+			// Word(tddd.dep().index(),tddd.dep().label().tag(),tddd.dep().value()),new
+			// Word(tddd.gov().index(),tddd.gov().label().tag(),tddd.gov().value()));
+			TypedDep stdep = new TypedDep(tddd);
+			retdeps.add(stdep);
+			ksession.insert(stdep);
+			// App.log(tddd+":"+stdep.toString());
+
+		}
+		ksession.fireAllRules();
+		
+		App.log("Total Dependencies",retdeps.size());
+		App.log("");
+		for(TypedDep xdep: retdeps){
+			if(xdep.getActions()!=null){
+				App.log(xdep.toString(),Arrays.toString(xdep.getActions()));
 			}
-			App.log("FOL::");
-			ksession.fireAllRules();
-			
-			/*for(Object o:ksession.getObjects){
-				if(o instanceof TypedDep){
-					TypedDep td = ((TypedDep)o);
-					String[] acts = td.getActions();
-					if(acts!=null)
-					for(String act: acts){
-					App.log(act);
-					}
-					if(td.getExperts().size()>0)
-					App.log(td.getExperts());
-				}
-			}*/
-			return retdeps;
+			else{
+				App.log(xdep.toString(),"No Action");
+			}
+		}
+		return retdeps;
 	}
 }

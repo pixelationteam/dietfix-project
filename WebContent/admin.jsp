@@ -6,8 +6,8 @@
 <%@page import="pup.thesis.server.AdminManager"%>
 <%@page import="java.sql.Connection"%>
 <%@page import="pup.thesis.server.DietfixServer"%>
-<% 
-    AdminManager am = AdminManager.validate(request);
+<%
+	AdminManager am = AdminManager.validate(request);
     if (am == null) {
         request.getRequestDispatcher("login.jsp").forward(request, response);
     }
@@ -23,8 +23,6 @@
             DietfixServer.stop();
         }
     }
- 
-
 %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
@@ -37,7 +35,7 @@
     <body>
        
         <form method="POST" >
-            <p><input type="submit" name="setserver" value="<% out.println((DietfixServer.isRunning()) ? "Stop" : "Start");%>" /></p>
+            <p><input type="submit" name="setserver" value="<%out.println((DietfixServer.isRunning()) ? "Stop" : "Start");%>" /></p>
             <p><input type="submit" name="logout" value="Logout" /></p>
         </form>
 

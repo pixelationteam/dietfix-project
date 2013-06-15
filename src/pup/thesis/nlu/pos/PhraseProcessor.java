@@ -10,7 +10,6 @@ import javax.security.auth.Subject;
 
 import org.drools.runtime.StatefulKnowledgeSession;
 
-import edu.stanford.nlp.dcoref.Dictionaries.Person;
 
 import pup.thesis.knowledgebase.Variables;
 import pup.thesis.knowledgebase.expert.Dietitian;
@@ -23,6 +22,7 @@ import pup.thesis.util.ClientData;
 
 import simplenlg.features.Feature;
 import simplenlg.features.Form;
+import simplenlg.features.Person;
 import simplenlg.framework.CoordinatedPhraseElement;
 import simplenlg.framework.NLGFactory;
 import simplenlg.phrasespec.NPPhraseSpec;
@@ -73,10 +73,9 @@ public class PhraseProcessor implements Serializable{
 		((CoordinatedPhraseElement) spe.getSubject()).addCoordinate(np);
 		((CoordinatedPhraseElement) spe.getVerb()).addCoordinate(vp);
 		
-		vp.setFeature(Feature.PERSON, Person.YOU);
 		
 		//spe.setFeature(Feature.MODAL			,"should"  );
-		spe.setFeature(Feature.FORM, Form.IMPERATIVE);
+		//spe.setFeature(Feature.FORM, Form.IMPERATIVE);
 		npspecs.put(subj.getIndex(), np);
 		vpspecs.put(verb.getIndex(), vp);
 		specs.put(verb.getIndex(), spe);
@@ -125,12 +124,16 @@ public class PhraseProcessor implements Serializable{
 	
 	public void addNounDeterminer(Word nn,Word det){
 		NPPhraseSpec np = npspecs.get(nn.getIndex());
-		np.addPreModifier(det.getLemma());
+		if(np!=null){
+			np.addPreModifier(det.getLemma());
+		}
 	}
 	
 	public void addModifier(Word nn,Word mod){
 		NPPhraseSpec np = npspecs.get(nn.getIndex());
-		np.addModifier(mod.getLemma());		
+		if(np!=null){
+			np.addModifier(mod.getLemma());		
+		}
 	}
 	
 	public void setSpiObject(Word verb,Word obj){
@@ -142,9 +145,12 @@ public class PhraseProcessor implements Serializable{
 		else{
 			word = obj.getLemma();
 		}
+
 		NPPhraseSpec np = nfact.createNounPhrase(word);
+
+		if(sp!=null){
 		((CoordinatedPhraseElement) sp.getVerb()).addPostModifier(np);
-		
+		}		
 		npspecs.put(obj.getIndex(), np);
 	}
 	
@@ -158,15 +164,20 @@ public class PhraseProcessor implements Serializable{
 			word = obj.getLemma();
 		}
 		NPPhraseSpec np = nfact.createNounPhrase(word);
-		((CoordinatedPhraseElement) sp.getObject()).addCoordinate(np);
-		
+		if(sp!=null){
+		CoordinatedPhraseElement cpe = (CoordinatedPhraseElement) sp.getObject();
+		cpe.addCoordinate(np);
+		}
 		npspecs.put(obj.getIndex(), np);
 	}
 	
 	public List<SPhraseSpec> getSPhrases(){
 		ArrayList<SPhraseSpec> sps = new ArrayList<SPhraseSpec>();
 		for(SPhraseSpec ss : specs.values()){
+			ss.setFeature(Feature.PERSON, Person.SECOND);
+			
 			sps.add(ss);
+			
 		}
 		return sps;
 	}

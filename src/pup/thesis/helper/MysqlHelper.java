@@ -81,6 +81,26 @@ public class MysqlHelper extends MysqlAuth {
         dbName = "sr25food";
         return new SafeConnection(clientdata.getQuerier(),dbHost, dbPort, dbName, dbUn, dbPw).getConnectionObject();
     }
+    
+    public static Connection createFitnessDBConnection(ClientData clientdata) throws ClassNotFoundException, InstantiationException, IllegalAccessException, SQLException {
+        String dbHost,dbPort,dbName,dbUn,dbPw;
+        dbHost = "localhost";
+        dbPort = "3306";
+        dbUn = "root";
+        dbPw = "";
+        dbName = "fitness";
+        return new SafeConnection(clientdata.getQuerier(),dbHost, dbPort, dbName, dbUn, dbPw).getConnectionObject();
+    }
+    
+    public static Connection createDiseasesDBConnection(ClientData clientdata) throws ClassNotFoundException, InstantiationException, IllegalAccessException, SQLException {
+        String dbHost,dbPort,dbName,dbUn,dbPw;
+        dbHost = "localhost";
+        dbPort = "3306";
+        dbUn = "root";
+        dbPw = "";
+        dbName = "diseases";
+        return new SafeConnection(clientdata.getQuerier(),dbHost, dbPort, dbName, dbUn, dbPw).getConnectionObject();
+    }
 	
 	/**
 	 * Gateway for queries regarding updating the database

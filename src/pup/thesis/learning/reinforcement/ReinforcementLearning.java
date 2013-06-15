@@ -12,6 +12,7 @@ import net.didion.jwnl.data.PointerType;
 import net.didion.jwnl.data.relationship.Relationship;
 import pup.thesis.helper.JwnlHelper;
 import pup.thesis.helper.MysqlHelper;
+import pup.thesis.logging.App;
 import pup.thesis.nlu.RelatedWord;
 
 public abstract class ReinforcementLearning {
@@ -34,7 +35,11 @@ public abstract class ReinforcementLearning {
 		
 		//gets the optimized policy based on lowest depth
 		Policy opti = evaluatePolicy(words);
-		
+		//App.log(opti.getInitState() == null);
+		//System.exit(0);
+		if(opti.getInitState()==null){
+			return false;
+		}
 		String sTemp = opti.getInitState().getLabel();
 		POS pTemp = opti.getInitState().getTag();
 		String aTemp = opti.getEndState().getAction();

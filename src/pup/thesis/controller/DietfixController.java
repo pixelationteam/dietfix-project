@@ -61,7 +61,7 @@ public class DietfixController extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		
+		/*
 		CoreParser parser = new CoreParser();
 		synonym = new WordSynonym();
 		JwnlHelper help = new JwnlHelper();
@@ -97,7 +97,7 @@ public class DietfixController extends HttpServlet {
 		request.setAttribute("depth", depth);
 		
 		
-		
+		*/
 		//ArrayList<ArrayList<String>> synonyms = new ArrayList<ArrayList<String>>();
 		//synonyms = getSynonyms(result3, result2);
 		//request.setAttribute("synonyms", synonyms);

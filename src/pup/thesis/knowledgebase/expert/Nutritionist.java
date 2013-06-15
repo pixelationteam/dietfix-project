@@ -21,28 +21,11 @@ public class Nutritionist extends Expert{
 	}
 
 	@Override
-	public List<ExpertAnswer> getAnswers(List<TypedDep> tds) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	
-
-	@Override
-	AnswerData getAnswerData(int id) throws SQLException,
-			ClassNotFoundException {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
 	void initialize() throws ClassNotFoundException, InstantiationException,
 			IllegalAccessException, SQLException {
 		// TODO Auto-generated method stub
 		
 	}
-	
-	
 
 	
 	

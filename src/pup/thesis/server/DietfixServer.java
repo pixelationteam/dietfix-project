@@ -4,11 +4,17 @@
  */
 package pup.thesis.server;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+
 import pup.thesis.knowledgebase.KBase;
+import pup.thesis.knowledgebase.QueryFilter;
 import pup.thesis.logging.App;
 import pup.thesis.nlg.TextGenerator;
 import pup.thesis.nlu.CoreParser;
 import pup.thesis.nlu.FirstOrderPredicateLogic;
+import pup.thesis.nlu.NLUStarter;
 import pup.thesis.nlu.NoiseDetector;
 import pup.thesis.nlu.WordSynonym;
 
@@ -18,16 +24,19 @@ import pup.thesis.nlu.WordSynonym;
  */
 public class DietfixServer {
     private static CoreParser parser = null;
-    private static TextGenerator textgen = null;
-    private static KBase kbase = null;
+    private static NLUStarter nluStarter = null;
     private static FirstOrderPredicateLogic fopl = null;
     private static NoiseDetector noiseDetect = null;
     private static WordSynonym wordSynonym = null;
+    private static TextGenerator textgen = null;
+    private static KBase kbase = null;
 
+    
     private static void init(){
         App.log("Dietfixser:21", "Starting server.");
         App.log("Loading Modules Needed for NLU..");
         parser=new CoreParser();
+        nluStarter = new NLUStarter();
         noiseDetect = new NoiseDetector();
         wordSynonym = new WordSynonym();
         App.log("Loading Text Generator..");
@@ -48,6 +57,10 @@ public class DietfixServer {
     public static boolean isRunning(){
         return parser!=null;
     	//return true;
+    }
+    
+    public static NLUStarter getNLUStarter(){
+    	return nluStarter;
     }
     
     public static WordSynonym getWordSynonym() {
@@ -74,4 +87,5 @@ public class DietfixServer {
     	return fopl;
     }
   
+   
 }

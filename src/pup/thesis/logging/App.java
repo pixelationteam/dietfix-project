@@ -10,7 +10,7 @@ package pup.thesis.logging;
  */
 public class App {
     public static void log(String source,Object e){
-        System.out.println(String.format("%s=> %s", source,e));
+        System.out.println(String.format("%s => %s", source,e));
     }
     public static void log(Object e){
     	System.out.println(e);

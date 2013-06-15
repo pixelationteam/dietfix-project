@@ -4,13 +4,14 @@ package rules
 import pup.thesis.nlu.pos.TypedDep;
 import pup.thesis.nlu.pos.Word;
 import pup.thesis.nlu.pos.PhraseProcessor;
+import pup.thesis.logging.App;
 
 rule "Rule for amod"
     when
     	$sent : PhraseProcessor( $dependencies : dependencies() )
     	$tdep : TypedDep( reln() == "amod" ) from $dependencies
     then
-    	System.out.println("DRL[amod]:"+$tdep.toString());
+    	App.log("DRL[amod]:"+$tdep.toString(), "Adding modifier["+$tdep.dep()+"] for: "+$tdep.gov());
         $sent.addModifier($tdep.gov(),$tdep.dep());
 end
 
@@ -19,7 +20,7 @@ rule "Rule for det"
     	$sent : PhraseProcessor( $dependencies : dependencies() )
     	$tdep : TypedDep( reln() == "det" ) from $dependencies
     then
-    	System.out.println("DRL[det]:"+$tdep.toString());
+		App.log("DRL[det]:"+$tdep.toString(), "Adding determiner["+$tdep.dep()+"] for: "+$tdep.gov());
         $sent.addNounDeterminer($tdep.gov(),$tdep.dep());
 end
 
@@ -28,7 +29,7 @@ rule "Rule for iobj"
     	$sent : PhraseProcessor( $dependencies : dependencies() )
     	$tdep : TypedDep( reln() == "iobj" ) from $dependencies
     then
-    	System.out.println("DRL[iobj]:"+$tdep.toString());
+    	App.log("DRL[iobj]:"+$tdep.toString(), "Adding indirect["+$tdep.dep()+"] object for: "+$tdep.gov());
         $sent.setSpiObject($tdep.gov(),$tdep.dep());
 end
 
@@ -37,7 +38,7 @@ rule "Rule for dobj"
     	$sent : PhraseProcessor( $dependencies : dependencies() )
     	$tdep : TypedDep( reln() == "dobj" ) from $dependencies
     then
-    	System.out.println("DRL[dobj]:"+$tdep.toString());
+    	App.log("DRL[dobj]:"+$tdep.toString(), "Adding directobject["+$tdep.dep()+"] for: "+$tdep.gov());
         $sent.setSpdObject($tdep.gov(),$tdep.dep());
 end
 
@@ -46,7 +47,7 @@ rule "Rule for nsubj"
     	$sent : PhraseProcessor( $dependencies : dependencies() )
     	$tdep : TypedDep( reln() == "nsubj" ) from $dependencies
     then
-    	System.out.println("DRL[nsubj]:"+$tdep.toString());
+    	App.log("DRL[nsubj]:"+$tdep.toString(), "Adding subject["+$tdep.dep()+"] for: "+$tdep.gov());
         $sent.addVerbxSubject($tdep.gov(),$tdep.dep());
 end
 

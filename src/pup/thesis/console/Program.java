@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Scanner;
 import java.util.Set;
 
 import org.drools.KnowledgeBase;
@@ -29,7 +30,6 @@ import net.didion.jwnl.data.PointerType;
 import net.didion.jwnl.data.Synset;
 import net.didion.jwnl.dictionary.Dictionary;
 
-import edu.stanford.nlp.dcoref.Dictionaries.Person;
 import edu.stanford.nlp.ling.CoreLabel;
 import edu.stanford.nlp.ling.HasWord;
 import edu.stanford.nlp.ling.Label;
@@ -46,9 +46,11 @@ import pup.thesis.knowledgebase.AnswerData;
 import pup.thesis.knowledgebase.KBase;
 import pup.thesis.knowledgebase.KeyTag;
 import pup.thesis.knowledgebase.KeyTagSet;
+import pup.thesis.knowledgebase.QueryFilter;
 import pup.thesis.knowledgebase.expert.Dietitian;
 import pup.thesis.knowledgebase.expert.ExpertAnswer;
 import pup.thesis.knowledgebase.expert.Experts;
+import pup.thesis.knowledgebase.expert.FitnessInstructor;
 import pup.thesis.knowledgebase.expert.Food;
 import pup.thesis.knowledgebase.expert.Nutrients;
 import pup.thesis.logging.App;
@@ -57,6 +59,7 @@ import pup.thesis.nlu.pos.TypedDep;
 import pup.thesis.nlu.pos.PhraseProcessor;
 import pup.thesis.nlu.pos.Word;
 import pup.thesis.querygeneration.FoodQG;
+import pup.thesis.server.DietfixServer;
 import pup.thesis.server.DietfixServer;
 
 import simplenlg.aggregation.AggregationRule;
@@ -141,21 +144,71 @@ public class Program {
 		App.log("Done");
 	}
 	
-	
+	private static void testInsert() {
+		/*KeyTagSet kts = new KeyTagSet();
+		kts.addKeyTag(new KeyTag(1,"FOOD"));
+		kts.addKeyTag(new KeyTag(2,"BLOOD"));
+		kts.addKeyTag(new KeyTag(2,"PROTEIN"));
+		kts.addKeyTag(new KeyTag(2,"RICH"));
+		HashMap<Integer,String> hm = new HashMap<Integer,String>();
+		//hm.put(4, "FOOD:01084");
+		insertAnswer(Experts.DIETITIAN,"Food rich in protein",kts,hm);*/
+		
+		KeyTagSet kts = new KeyTagSet();
+		kts.addKeyTag(new KeyTag(1,"FOOD"));
+		kts.addKeyTag(new KeyTag(1,"FRUIT"));
+		kts.addKeyTag(new KeyTag(2,"BLOOD"));
+		kts.addKeyTag(new KeyTag(2,"PROTEIN"));
+		HashMap<Integer,String> hm = new HashMap<Integer,String>();
+		hm.put(3, "FOOD:11530");
+		insertAnswer(Experts.NUTRITIONIST,"You eat food",kts,hm);
+/*		
+		KeyTagSet kts = new KeyTagSet();
+		kts.addKeyTag(new KeyTag(1,"FOOD"));
+		kts.addKeyTag(new KeyTag(2,"BLOOD"));
+		kts.addKeyTag(new KeyTag(3,"SUGAR"));
+		HashMap<Integer,String> hm = new HashMap<Integer,String>();
+		insertAnswer(Experts.DIETITIAN,"You avoid chocolates",kts,hm);*/
+	}
 
 	public static void main(String... args) throws JWNLException {
-	
+
+		//testInsert();System.exit(0);
+		ClientData cdata = new ClientData();
+		
 	
 		if(!DietfixServer.isRunning()){
 			DietfixServer.start();
 		}
-		ClientData cdata = new ClientData();
-		//simpleNLG2();		System.exit(0);
-		//testInsert();System.exit(0);
-		Tree inputpt = DietfixServer.getParser().getParseTree("I am hungry");
-		List<TypedDep> tlist = testFOL(inputpt);
-		testNLG(cdata,tlist);System.exit(0);
+		//Tree inputpt = DietfixServer.getParser().getParseTree("What should I do to lose weight fast?");
+		Tree inputpt = DietfixServer.getNLUStarter().startNLUModule("What to eat if I am losing blood?");
 		
+		try {
+			App.log("");
+			App.log("Press any key to proceed..");
+			System.in.read();
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		
+		List<TypedDep> xdeplist = DietfixServer.getFOPL().parseDeps(DietfixServer.getParser().getDependencies(inputpt));
+		HashMap<Experts, List<AnswerData>> sh = null;
+		try {
+			sh = DietfixServer.getKBase().process(cdata, xdeplist);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		String txt = DietfixServer.getTextGenerator().generateText(cdata, sh);
+		App.log("");
+		App.log("");
+		App.log("");
+		App.log("RESPONSE",txt);
+		
+		
+		
+	
 
 		System.exit(0);
 		dummy1(cdata);
@@ -249,54 +302,11 @@ public class Program {
 
 
 
-	private static void testNLG(ClientData cdata,List<TypedDep> tdep) {
-		Dietitian dtn;
-		try {
-			dtn = new Dietitian(cdata);
-			//Food fd1 = dtn.getFood("01004");
-			//App.log(fd1.getDescription());System.exit(0);
-			ArrayList<AnswerData> adata = new ArrayList<AnswerData>();
-			List<ExpertAnswer> lexp = dtn.getAnswers(tdep);
-			App.log("::::::",lexp.size());
-			for(ExpertAnswer tds: lexp){
-				App.log(tds.getId());
-				App.log(tds.getDesc());
-				String s = "";
-				AnswerData ad = tds.getAnswerData()	;
-				adata.add(ad);
-			}
-			
-			String txt = DietfixServer.getTextGenerator().generateText(cdata, adata);
-			App.log(txt);
-			
-		} catch (ClassNotFoundException | InstantiationException
-				| IllegalAccessException | SQLException e3) {
-			// TODO Auto-generated catch block
-			e3.printStackTrace();
-		}
-	}
 
 
 
-	private static List<TypedDep> testFOL(Tree inputpt) {
-		List<TypedDep> xdeplist = DietfixServer.getFOPL().parseDeps(DietfixServer.getParser().getDependencies(inputpt));
-		App.log(xdeplist.size());
-		for(TypedDep xdep: xdeplist){
-			App.log(Arrays.toString(xdep.getActions()));
-		}
-		return xdeplist;
-	}
 
-
-
-	private static void testInsert() {
-		KeyTagSet kts = new KeyTagSet();
-		kts.addKeyTag(new KeyTag(1,"TEST"));
-		kts.addKeyTag(new KeyTag(1,"TEST2"));
-		HashMap<Integer,String> hm = new HashMap<Integer,String>();
-		//hm.put(4, "FOOD:01084");
-		insertAnswer(Experts.DIETITIAN,"You kill the cat or eat the mouse",kts,hm);
-	}
+	
 
 	public static void configureJWordNet() {
 		// WARNING: This still does not work in Java 5!!!
@@ -356,7 +366,7 @@ public class Program {
 		
 		//p.addPostModifier("fast");
 
-		verbs.setFeature(Feature.PERSON, Person.YOU);
+		//verbs.setFeature(Feature.PERSON, Person.YOU);
 		p.setFeature(Feature.MODAL			,"should"  );
 		// p.setFeature(Feature.INTERROGATIVE_TYPE, InterrogativeType.HOW);
 		// p.setFeature(Feature.INTERROGATIVE_TYPE, InterrogativeType.HOW_MANY);

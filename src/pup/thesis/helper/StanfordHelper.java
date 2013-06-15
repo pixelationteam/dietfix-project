@@ -7,11 +7,11 @@ import java.util.List;
 
 import pup.thesis.nlu.RelatedWord;
 import edu.stanford.nlp.ling.CoreLabel;
+import edu.stanford.nlp.objectbank.TokenizerFactory;
 import edu.stanford.nlp.parser.lexparser.LexicalizedParser;
 import edu.stanford.nlp.process.CoreLabelTokenFactory;
 import edu.stanford.nlp.process.Morphology;
 import edu.stanford.nlp.process.PTBTokenizer;
-import edu.stanford.nlp.process.TokenizerFactory;
 import edu.stanford.nlp.trees.Tree;
 
 /**

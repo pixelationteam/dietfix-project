@@ -1,14 +1,81 @@
 //created on: 06 11, 13
 package rules
 import pup.thesis.nlu.pos.TypedDep;
+
 // setExperts argument :  1 = dietitian , 2 = fitness_instructor , 3 = nutritionist
+
 rule "Check Typed Work"
 when
 	$t : TypedDep(reln()=="nsubj",gov().getLemma() =="hungry",dep().getLemma() == "I")
 	
 then
-	$t.setActions("TEST2","TEST");
-	$t.setExpert("123");
+	$t.setActions("TEST2:123","TEST:123");
 end
 
 
+rule "Check should eat"
+when 
+	$t : TypedDep(reln()=="nsubj",gov().getLemma() =="eat",dep().getLemma() == "I")
+	
+then
+	$t.setActions("EAT:1");
+end
+
+
+
+rule "Check should eat lose weight"
+when 
+	$t : TypedDep(reln()=="dobj",gov().getLemma() =="lose",dep().getLemma() == "weight")
+	
+then
+	$t.setActions("EAT:1");
+end
+
+rule "Check do exercise"
+when 
+	$t : TypedDep(reln()=="dobj",gov().getLemma() =="do",dep().getLemma() == "exercise")
+	
+then
+	$t.setActions("SLOW:2");
+end
+
+
+rule "rule for should eat lose weight fast"
+when 
+	$t : TypedDep(reln()=="advmod",gov().getLemma() =="lose",dep().getLemma() == "fast")
+	
+then
+	$t.setActions("CARROTS:1");
+end
+
+rule "rule for what to excecise"
+when 
+	$t : TypedDep(reln()=="det",gov().getLemma() =="exercise",dep().getLemma() == "What")
+	
+then
+	$t.setActions("RUN:2");
+end
+
+rule "rule for what-eat"
+when 
+	$t : TypedDep(reln()=="dep",gov().getLemma() =="eat",dep().getLemma() == "What")
+	
+then
+	$t.setActions("FOOD:13");
+end
+
+rule "rule for user-losing"
+when 
+	$t : TypedDep(reln()=="nsubj",gov().getLemma() =="losing",dep().getLemma() == "I")
+	
+then
+	$t.setActions("LOSS:123");
+end
+
+rule "rule for losing-blood"
+when 
+	$t : TypedDep(reln()=="dobj",gov().getLemma() =="losing",dep().getLemma() == "blood")
+	
+then
+	$t.setActions("BLOOD:3","PROTEIN:3");
+end
