@@ -1,0 +1,26 @@
+@CHARSET "ISO-8859-1";
+
+
+body {
+	background-image: url(../images/background.png);
+	background-repeat: repeat;
+}
+
+#main-div {
+	background-color:rgb(231, 231, 231);
+	position:absolute;
+	min-width:980px;
+	top:20px;
+	left:50%;
+	margin-bottom:20px;
+	margin-left:-490px;	
+	border:solid 2px gray;
+}
+
+div .header{
+	padding:10px;
+	border-bottom:solid 2px gray;
+}
+div .content{
+	padding:10px;
+}

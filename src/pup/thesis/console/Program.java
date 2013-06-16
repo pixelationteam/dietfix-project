@@ -173,6 +173,7 @@ public class Program {
 
 	public static void main(String... args) throws JWNLException {
 
+		testNLG3();System.exit(0);
 		//testInsert();System.exit(0);
 		ClientData cdata = new ClientData();
 		
@@ -220,6 +221,43 @@ public class Program {
 	}
 
 
+	private static void testNLG3(){
+		
+		String input = "Strawberry is sweet."	;
+		if(!DietfixServer.isRunning()){
+			DietfixServer.start();
+		}
+		List<TypedDependency> dtp = DietfixServer.getParser().getDependencies(DietfixServer.getParser().getParseTree(input));
+		TypedDep[] alist = new TypedDep[dtp.size()];
+		int i = 0;
+		for(TypedDependency tdp : dtp){
+			alist[i] = new TypedDep(tdp);
+			App.log(alist[i]);
+			i++;
+		}
+		
+		StatefulKnowledgeSession ksession = DietfixServer.getKBase().getNLGKBase().newStatefulKnowledgeSession();
+		ClientData cdata = new ClientData();
+				PhraseProcessor asnt = new PhraseProcessor(cdata,
+						alist, new HashMap<Integer,String>());
+				
+	
+		
+		//   TEXT AGGREGATION HERE
+		
+		ksession.insert(asnt);
+		ksession.fireAllRules();
+		for (Object pproc : ksession.getObjects())
+			if (pproc instanceof PhraseProcessor) {
+				PhraseProcessor ph = (PhraseProcessor) pproc;
+				for (SPhraseSpec specsnt : ph.getSPhrases()) {
+					String res = DietfixServer.getTextGenerator().getRealiser()
+							.realiseSentence(specsnt);
+					App.log(res);
+				}
+			}
+
+	}
 
 	private static void dummy1(ClientData cdata) {
 		TestBasicRules tbr = new TestBasicRules();
@@ -351,12 +389,9 @@ public class Program {
 		CoordinatedPhraseElement subjects = nlgFactory.createCoordinatedPhrase();
 		CoordinatedPhraseElement verbs = nlgFactory.createCoordinatedPhrase();
 		CoordinatedPhraseElement objects = nlgFactory.createCoordinatedPhrase();
-		subjects.addCoordinate("you");
-		verbs.addCoordinate("run");
-		verbs.addCoordinate("walk");
-		verbs.addCoordinate("jump");
-		objects.addCoordinate("my dog");
-		objects.addCoordinate("cat");
+		subjects.addCoordinate("He");
+		verbs.addCoordinate("is");
+		objects.addCoordinate("happy");
 
 		p.setSubject(subjects);
 		p.setVerb(verbs);
@@ -367,7 +402,7 @@ public class Program {
 		//p.addPostModifier("fast");
 
 		//verbs.setFeature(Feature.PERSON, Person.YOU);
-		p.setFeature(Feature.MODAL			,"should"  );
+		//p.setFeature(Feature.MODAL			,"should"  );
 		// p.setFeature(Feature.INTERROGATIVE_TYPE, InterrogativeType.HOW);
 		// p.setFeature(Feature.INTERROGATIVE_TYPE, InterrogativeType.HOW_MANY);
 		// p.setFeature(Feature.INTERROGATIVE_TYPE,
@@ -375,6 +410,10 @@ public class Program {
 		// p.setFeature(Feature.INTERROGATIVE_TYPE,
 		// InterrogativeType.WHO_SUBJECT);
 
+		//Create an instance of Aggregator
+		
+		//now pass a list of NLGElements (usually sentences) to the aggregator, which runs the rules and returns the outcome
+		
 		App.log(realiser.realiseSentence(p));
 
 		System.exit(1);

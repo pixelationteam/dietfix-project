@@ -19,6 +19,7 @@ import javax.servlet.http.HttpServletResponse;
 import net.didion.jwnl.data.IndexWord;
 import net.didion.jwnl.data.POS;
 import net.didion.jwnl.data.Synset;
+import pup.thesis.helper.GeneralHelper;
 import pup.thesis.helper.JwnlHelper;
 import pup.thesis.helper.MysqlHelper;
 import pup.thesis.nlu.CoreParser;
@@ -61,6 +62,19 @@ public class DietfixController extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
+		
+		String reqUri = GeneralHelper.getLastBitFromUrl(request.getRequestURI());
+		
+		if(reqUri.equalsIgnoreCase("api")){
+			try {
+				Thread.sleep(2000);
+			response.getOutputStream().print("HHAHAHAAHAHAH");
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
 		/*
 		CoreParser parser = new CoreParser();
 		synonym = new WordSynonym();
@@ -101,9 +115,9 @@ public class DietfixController extends HttpServlet {
 		//ArrayList<ArrayList<String>> synonyms = new ArrayList<ArrayList<String>>();
 		//synonyms = getSynonyms(result3, result2);
 		//request.setAttribute("synonyms", synonyms);
-		RequestDispatcher view = request.getRequestDispatcher("result.jsp");
+		//RequestDispatcher view = request.getRequestDispatcher("result.jsp");
 		
-		view.forward(request, response);
+		//view.forward(request, response);
 	}
 	
 	private ArrayList<ArrayList<String>> getSynonyms(ArrayList<String> lemma, ArrayList<String> posTags) {

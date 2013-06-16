@@ -54,7 +54,7 @@ public class PhraseProcessor implements Serializable{
 	public TypedDep[] dependencies(){
 		return dependencies;
 	}
-	public void addVerbxSubject(Word verb,Word subj){
+	public void addNewSubject(Word verb,Word subj){
 		SPhraseSpec spe = nfact.createClause();
 		spe.setSubject(nfact.createCoordinatedPhrase());
 		spe.setVerb(nfact.createCoordinatedPhrase());
@@ -68,6 +68,7 @@ public class PhraseProcessor implements Serializable{
 			word = subj.getLemma();
 		}
 		NPPhraseSpec np = nfact.createNounPhrase(word);
+		
 		VPPhraseSpec vp = nfact.createVerbPhrase(verb.getLemma());
 		
 		((CoordinatedPhraseElement) spe.getSubject()).addCoordinate(np);
@@ -84,7 +85,7 @@ public class PhraseProcessor implements Serializable{
 		
 		String[] s2 = s.split(":");
 		Variables var = Variables.valueOf(s2[0]);
-		if(var!=null||s2.length!=2){
+		if(var!=null&&s2.length==2){
 			switch(var){
 			case EXCERCISE:
 				
@@ -101,25 +102,12 @@ public class PhraseProcessor implements Serializable{
 					e3.printStackTrace();
 				}
 				break;
-			case USER_AGE:
-				break;
-			case USER_BMS:
-				break;
-			case USER_FIRSTNAME:
-				break;
-			case USER_FULLNAME:
-				break;
-			case USER_HEIGHT:
-				break;
-			case USER_WEIGHT:
+			case USER:
 				break;
 			}
 		}
-		else{
-			return "%INVALID%";
-		}
 		
-		return null;
+		return "%INVALID%";
 	}
 	
 	public void addNounDeterminer(Word nn,Word det){

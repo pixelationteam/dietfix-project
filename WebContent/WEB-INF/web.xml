@@ -22,12 +22,16 @@
 		<servlet-name>Dietfix</servlet-name>
 		<url-pattern>/admin</url-pattern>
 	</servlet-mapping>
-        <servlet-mapping>
+    <servlet-mapping>
 		<servlet-name>Dietfix</servlet-name>
 		<url-pattern>/aggre</url-pattern>
 	</servlet-mapping>
-        <servlet-mapping>
+    <servlet-mapping>
 		<servlet-name>Dietfix</servlet-name>
 		<url-pattern>/foods</url-pattern>
+	</servlet-mapping>
+    <servlet-mapping>
+		<servlet-name>Dietfix</servlet-name>
+		<url-pattern>/api</url-pattern>
 	</servlet-mapping>
 </web-app>

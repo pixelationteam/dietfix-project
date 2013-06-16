@@ -130,7 +130,7 @@ public class KBase {
 
 	}
 
-	public void insertAnswer(ClientData cdata, Experts x, String sentence,
+	public void insertAnswer(ClientData cdata, Experts x,SentType sent, String sentence,
 			KeyTagSet keytags, HashMap<Integer, String> hm) {
 
 		Connection conn;
@@ -167,7 +167,7 @@ public class KBase {
 		 * App.log(DietfixServer.getTextGenerator(
 		 * ).getRealiser().realiseSentence(specsnt)); }
 		 */
-		String query = "insert into dietfix_ans(AnsObj,AnsExpert,AnsDesc) values (?,?,?)";
+		String query = "insert into dietfix_ans(AnsObj,AnsExpert,AnsDesc,SentType) values (?,?,?,?)";
 
 		try {
 			conn = MysqlHelper.createDietfixConnection(cdata);
@@ -175,6 +175,7 @@ public class KBase {
 			statement.setObject(1, (Object) ad);
 			statement.setString(2, x.name());
 			statement.setString(3, keytags.toString());
+			statement.setString(4, sent.name());
 			statement.execute();
 		} catch (ClassNotFoundException | InstantiationException
 				| IllegalAccessException | SQLException e) {
