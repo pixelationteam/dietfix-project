@@ -1,0 +1,59 @@
+@CHARSET "ISO-8859-1";
+
+#main-div {
+	min-width:500px;
+	top:20px;
+	left:50%;
+	margin-bottom:20px;
+	margin-left:-250px;	
+}
+
+
+div.header {
+	text-align: center;
+}
+
+div.chatbox{
+	margin:10px;
+	border:solid 1px rgb(169, 170, 170);
+	background-color:white;
+	min-height:50px;
+}
+
+.answer{
+	background-color:#FFB5B5;
+}
+.question{
+	background-color:#FFFFFF;
+}
+
+.msg {
+	width:478px;
+}
+
+.msg span{
+	padding:5px;
+}
+
+.msg .speaker{
+	float:left;
+	max-width:100px;
+	display:block;
+	font-weight:600;
+}
+
+.msg .message{
+	float:right;
+	width:350px;
+	display:block;
+	border-left: solid 1px rgb(168, 168, 168);
+}
+
+.chatbox .msg-separator{
+	clear: both;
+}
+
+#input-form	{
+	margin:10px;
+	
+}

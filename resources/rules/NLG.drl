@@ -48,8 +48,11 @@ rule "Rule for nsubj"
     	$tdep : TypedDep( reln() == "nsubj" ) from $dependencies
     then
     	App.log("DRL[nsubj]:"+$tdep.toString(), "Adding subject["+$tdep.dep()+"] for: "+$tdep.gov());
-        $sent.addVerbxSubject($tdep.gov(),$tdep.dep());
+        $sent.addNewSubject($tdep.gov(),$tdep.dep());
 end
+
+
+
 
 
 

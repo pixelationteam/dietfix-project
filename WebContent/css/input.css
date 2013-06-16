@@ -1,0 +1,28 @@
+@CHARSET "ISO-8859-1";
+
+#main-div{
+min-width: 500px;
+margin-bottom: 20px;
+margin-left: -250px;
+}
+
+
+#tag-table{
+	width:480px;
+}
+
+#tag-table td{
+	min-height:25px;
+	text-align:center;
+	background-color:white;
+}
+
+#tag-table th{
+	
+	border:solid 1px ;
+}
+
+#tag-table td{
+	
+	border:solid 1px ;
+}
