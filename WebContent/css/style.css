@@ -1,0 +1,90 @@
+/**
+ *
+ * 
+ * @author: Paulzed;
+ */
+
+
+html {
+	font-size: 16px;
+}
+
+body {
+	font-size: 62.5%;
+	font-family: sans-serif;
+	background: #333 url('../resources/simple_dashed.png') top;
+}
+
+#container {
+	width: 100%;
+}
+
+/* Login Form */
+#loginForm {
+	display: none;
+	border: 10px solid rgba(35,35,35,0.5);
+	border-radius: 10px;
+	background: #999;
+	padding: 25px 100px;
+	position: relative;
+	margin: 125px auto;
+	width: 20%;
+	height: 250px;
+}
+
+#loginForm h1 {
+	color: #444;
+	border-bottom: 1px solid #000;
+	text-align: center;
+	font-size: 2.8125em;
+	text-shadow: 1px 1px 2px white,
+		-1px -1px 2px #ccc;
+}
+
+#loginForm .label {
+	font-size: 1.125em;
+	text-shadow: 1px 1px 1px white,
+		-1px -1px 1px #ccc;
+}
+
+#loginForm .field {
+	border-radius: 5px;
+	margin: 10px auto;
+	height: 25px;
+	width: 200px;
+	box-shadow: 1px 1px 1px 0px #000 inset,
+		-1px -1px 1px -1px #000 inset;
+}
+
+#loginContent .buttonFields {
+	text-align: center;
+	margin: 0 auto;
+}
+
+#loginContent .buttonFields input {
+	border-radius: 3px;
+	background: #fff;
+	width: 100px;
+	height: 25px;
+	margin: 10px;
+	border-color: transparent;
+	box-shadow: 2px 0px 6px -3px #000,
+	-2px 0px 6px -3px #000, 
+	0px 0px 4px transparent inset;
+}
+
+#loginContent table {
+	margin: 0 auto;
+	border-collapse: collapse;
+}
+
+#loginContent {
+	margin: 0 auto;
+}
+
+.error {
+	text-align: center;
+	display: none;
+	color: red;
+	font-size: 1em;
+}

@@ -1,0 +1,114 @@
+html {
+	font-size: 16px;
+	font-family: sans-serif;
+
+}
+
+body {
+	font-size: 62.5%;
+	background: #333 url(../img/cream_dust.png);
+}
+
+header {
+	text-align: center;
+	padding: 15px;
+	background: #111;
+	box-shadow: 0px 1px 2px 2px #000;
+}
+
+header p {
+	font: 0.5em;
+	text-shadow: 1px 1px 2px #777,
+		-1px -1px 2px #000;
+}
+
+#progress-section {
+	display: none;
+	width: 85%;
+	height: 250px;
+}
+
+#bmi-section {
+	display: none;
+	width: 35%;
+	height: 220px;
+}
+
+#schedule-section {
+	display: none;
+	width: 50%;
+	height: 220px;
+}
+
+section {
+	padding: 1px;
+	margin: 1px;
+	float: left;
+}
+
+.form-style h2 {
+	font-size: 1.25em;
+	text-align: center;
+	background-image: linear-gradient(bottom, rgb(206,214,212) 38%, rgb(255,255,255) 69%);
+background-image: -o-linear-gradient(bottom, rgb(206,214,212) 38%, rgb(255,255,255) 69%);
+background-image: -moz-linear-gradient(bottom, rgb(206,214,212) 38%, rgb(255,255,255) 69%);
+background-image: -webkit-linear-gradient(bottom, rgb(206,214,212) 38%, rgb(255,255,255) 69%);
+background-image: -ms-linear-gradient(bottom, rgb(206,214,212) 38%, rgb(255,255,255) 69%);
+	box-shadow: 1px 0px 2px 1px #111,
+	-1px 0px 2px 1px #111;
+	margin-bottom: 0px;
+}
+
+.section-content {
+	box-shadow: 0px 1px 2px 1px #111;
+	position: relative;
+	width: 100%;
+	height: 180px;
+	background: #eee;
+}
+
+#userPic {
+	border: 5px solid white;
+	background: black;
+	width: 80px;
+	height: 75px;
+	margin: 10px auto;
+}
+
+.icon-search {
+	width: 23px;
+}
+
+#userPic img {
+	width: 80px;
+	height: 75px;
+}
+
+nav {
+	box-shadow: 2px 0px 1px 1px #000;
+	height: 100%;
+}
+
+.tab-options a {
+	color: #777;
+	text-decoration: none;
+}
+
+.tab-options li {
+	border: 1px solid #000;
+	text-align: left;
+	font-size: 1.5em;
+	padding: 10px;
+	margin: 0px;
+}
+
+.selected {
+	border-left: 5px solid red;
+	background: #000;
+}
+
+.tabsDash {
+	background: #111;
+	float: left;
+}
+
