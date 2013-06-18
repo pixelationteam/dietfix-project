@@ -7,6 +7,7 @@ package pup.thesis.server;
 import javax.security.auth.message.callback.PrivateKeyCallback;
 import javax.servlet.http.HttpServletRequest;
 import pup.thesis.logging.App;
+import pup.thesis.logging.Modules;
 
 /**
  *
@@ -25,7 +26,7 @@ public class AdminManager {
     }
     
     private static boolean checkAccount(String username,String password){
-        App.log("HELLO "+username+":"+password);
+        App.log(Modules.SYSTEM,"HELLO "+username+":"+password);
         return (username.equals("TEST")&&password.equals(""));
     }
     
@@ -36,7 +37,6 @@ public class AdminManager {
             Object ruser = request.getParameter("username");
             if(ruser !=null&&checkAccount(ruser.toString(), request.getParameter("password").toString())){  
                 request.getSession().setAttribute("dietfixuser", ruser.toString());
-                
                 return new AdminManager(ruser.toString());
             }
             else{

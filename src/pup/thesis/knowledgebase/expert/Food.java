@@ -14,6 +14,7 @@ import assets.sr25food.Tables;
 import assets.sr25food.tables.records.AbbrevRecord;
 
 import pup.thesis.logging.App;
+import pup.thesis.logging.Modules;
 import pup.thesis.util.mysql.DBObject;
 
 public class Food implements DBObject{
@@ -63,7 +64,7 @@ public class Food implements DBObject{
 					weight1.setUnit(wd1);
 				} catch (Exception e) {
 					// TODO Auto-generated catch block
-					App.log("Food:",e.getMessage());
+					App.log(Modules.INFORMATIONI_RETRIEVAL,"Food:",e.getMessage());
 					weight1 = null;
 				}
 			}
@@ -73,7 +74,7 @@ public class Food implements DBObject{
 					weight2.setUnit(wd2);
 				} catch (Exception e) {
 					// TODO Auto-generated catch block
-					App.log("Food:",e.getMessage());
+					App.log(Modules.INFORMATIONI_RETRIEVAL,"Food:",e.getMessage());
 					weight2 = null;
 				}
 			}

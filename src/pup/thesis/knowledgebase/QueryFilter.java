@@ -7,6 +7,7 @@ import java.util.List;
 import pup.thesis.knowledgebase.expert.Expert;
 import pup.thesis.knowledgebase.expert.Experts;
 import pup.thesis.logging.App;
+import pup.thesis.logging.Modules;
 import pup.thesis.nlu.pos.TypedDep;
 
 public class QueryFilter {
@@ -40,7 +41,7 @@ public class QueryFilter {
 		double dx = ((float)(dietcounter.size())/size)*100;
 		double fx = ((float)(fitcounter.size())/size)*100;
 		double nx = ((float)(nutcounter.size())/size)*100;
-		App.log("QueryFilter:",String.format("Data:%s [Dietitian:%s%%][FitnessInstructor:%s%%][Nutritionist:%s%%]",size, dx,fx,nx));
+		App.log(Modules.INFORMATIONI_RETRIEVAL,"QueryFilter:",String.format("Data:%s [Dietitian:%s%%][FitnessInstructor:%s%%][Nutritionist:%s%%]",size, dx,fx,nx));
 		hm.put(Experts.DIETITIAN, dietcounter);
 		hm.put(Experts.FITNESS_INSTRUCTOR, nutcounter);
 		hm.put(Experts.NUTRITIONIST, nutcounter);

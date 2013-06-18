@@ -9,6 +9,7 @@ import java.util.Enumeration;
 import java.util.HashMap;
 
 import pup.thesis.logging.App;
+import pup.thesis.logging.Modules;
 
 public class DBQuerier {
 
@@ -20,14 +21,14 @@ public class DBQuerier {
 	}
 	public static void stop() throws SQLException{
 		 Enumeration<Driver> drivers = DriverManager.getDrivers();
-         App.log("");
+         App.log(Modules.SYSTEM,"");
 	        while (drivers.hasMoreElements()) {
 	            Driver driver = drivers.nextElement();
 	            try {
 	                DriverManager.deregisterDriver(driver);
-	                App.log(String.format("deregistering jdbc driver: %s", driver));
+	                App.log(Modules.SYSTEM,String.format("deregistering jdbc driver: %s", driver));
 	            } catch (SQLException e) {
-	                App.log(String.format("Error deregistering driver %s", driver), e);
+	                App.log(Modules.SYSTEM,String.format("Error deregistering driver %s", driver), e);
 	            }
 
 	        }
@@ -69,7 +70,7 @@ public class DBQuerier {
 				}
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
-				App.log("MysqlQuerier:", e.getMessage());
+				App.log(Modules.SYSTEM,"MysqlQuerier:", e.getMessage());
 			}
 			cons.remove(sc);
 		}

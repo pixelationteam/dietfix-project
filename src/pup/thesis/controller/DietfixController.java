@@ -1,16 +1,21 @@
 package pup.thesis.controller;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 
+import javax.faces.context.ResponseWriter;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
+import javax.servlet.ServletOutputStream;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -22,9 +27,17 @@ import net.didion.jwnl.data.Synset;
 import pup.thesis.helper.GeneralHelper;
 import pup.thesis.helper.JwnlHelper;
 import pup.thesis.helper.MysqlHelper;
+import pup.thesis.knowledgebase.AnswerData;
+import pup.thesis.knowledgebase.expert.Experts;
+import pup.thesis.logging.App;
+import pup.thesis.logging.Modules;
 import pup.thesis.nlu.CoreParser;
 import pup.thesis.nlu.WordSynonym;
+import pup.thesis.nlu.pos.TypedDep;
+import pup.thesis.server.DietfixServer;
 import pup.thesis.test.WordSynonymTest;
+import pup.thesis.util.ClientData;
+import edu.stanford.nlp.io.EncodingPrintWriter.out;
 import edu.stanford.nlp.trees.Tree;
 
 /**
@@ -62,17 +75,49 @@ public class DietfixController extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		
 		String reqUri = GeneralHelper.getLastBitFromUrl(request.getRequestURI());
-		
+		ClientData cdata = (ClientData) request.getAttribute("clientdata");
+		PrintWriter ops = response.getWriter(); 
+		if(cdata==null){
+			ops.print("Error: No data for client found");
+			return;
+		}
 		if(reqUri.equalsIgnoreCase("api")){
+			String input = request.getParameter("input");
+			if(input==null||input.length()==0){
+				ops.print("Error: Invalid input string");
+				return;
+			}
+			if(!DietfixServer.isRunning()){
+				DietfixServer.start();
+			}
+			//Tree inputpt = DietfixServer.getParser().getParseTree("What should I do to lose weight fast?");
+			Tree inputpt = DietfixServer.getNLUStarter().startNLUModule(input);
+			/*
 			try {
-				Thread.sleep(2000);
-			response.getOutputStream().print("HHAHAHAAHAHAH");
-			} catch (InterruptedException e) {
+				App.log("");
+				App.log("Press any key to proceed..");
+				System.in.read();
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}*/
+			
+			List<TypedDep> xdeplist = DietfixServer.getFOPL().parseDeps(DietfixServer.getParser().getDependencies(inputpt));
+			HashMap<Experts, List<AnswerData>> sh = null;
+			try {
+				sh = DietfixServer.getKBase().process(cdata, xdeplist);
+			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+			String txt = DietfixServer.getTextGenerator().generateText(cdata, sh);
+			App.log(Modules.SYSTEM,"");
+			App.log(Modules.SYSTEM,"");
+			App.log(Modules.SYSTEM,"");
+			App.log(Modules.SYSTEM,"RESPONSE",txt);
+			ops.print(txt);
+			return;
 		}
 		
 		/*

@@ -1,3 +1,9 @@
+$(document).ready(function(){
+	$("#submit-text").click(function(){
+		validate();
+	});
+});
+
 function addMessage(speaker, message) {
 	var chatbox = $(".chatbox");
 	var newmsg = $("<div class='msg'>");
@@ -23,19 +29,23 @@ function addMessage(speaker, message) {
 	return msg;
 }
 
-function validate(form) {
-	var inputter = form.elements["input"];
-	if (inputter.value === "") {
+function validate() {
+	var inptext = $("#text-input");
+	var string = $(inptext).val();
+	var inpform = $("#inp-div");
+	if (string === "") {
 		alert("Invalid input.");
 	} else {
-		addMessage("USER", inputter.value);
+		addMessage("USER", string);
 		var msg = addMessage("DIETFIX");
-		var inpform = $("#input-form");
 		$(inpform).css("visibility","hidden");
-		$(inputter).val("");
-		$.post('api', $(form).serialize(), function(data) {
+		$(inptext).val("");
+		$.post('api',{input:string}, function(data) {
 			$(msg).html(data);
 			$(inpform).css("visibility","visible");
+		}).fail(function(){ 
+			  // Handle error here
+			$(msg).html("An error has occured.");
 		});
 	}
 	return false;

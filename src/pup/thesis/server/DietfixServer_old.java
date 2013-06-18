@@ -6,6 +6,7 @@ package pup.thesis.server;
 
 import pup.thesis.knowledgebase.KBase;
 import pup.thesis.logging.App;
+import pup.thesis.logging.Modules;
 import pup.thesis.nlg.TextGenerator;
 import pup.thesis.nlu.CoreParser;
 import pup.thesis.nlu.FirstOrderPredicateLogic;
@@ -25,17 +26,17 @@ public class DietfixServer_old {
     private static WordSynonym wordSynonym = null;
 
     private static void init(){
-        App.log("Dietfixser:21", "Starting server.");
-        App.log("Loading Modules Needed for NLU..");
+        App.log(Modules.SYSTEM,"Dietfixser:21", "Starting server.");
+        App.log(Modules.SYSTEM,"Loading Modules Needed for NLU..");
         parser=new CoreParser();
         noiseDetect = new NoiseDetector();
         wordSynonym = new WordSynonym();
-        App.log("Loading Text Generator..");
+        App.log(Modules.SYSTEM,"Loading Text Generator..");
         textgen = new TextGenerator();
-        App.log("Loading Knowledge Bases..");
+        App.log(Modules.SYSTEM,"Loading Knowledge Bases..");
         kbase = new KBase();
         fopl = new FirstOrderPredicateLogic();
-        App.log("Dietfixser:", "Server Started");
+        App.log(Modules.SYSTEM,"Dietfixser:", "Server Started");
     }
     public static void start(){
         init();

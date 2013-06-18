@@ -29,6 +29,7 @@ import edu.stanford.nlp.trees.TreebankLanguagePack;
 import edu.stanford.nlp.trees.TypedDependency;
 
 import pup.thesis.logging.App;
+import pup.thesis.logging.Modules;
 import pup.thesis.nlu.CoreParser;
 import pup.thesis.nlu.pos.TypedDep;
 import pup.thesis.nlu.pos.Word;
@@ -79,14 +80,14 @@ public class TestBasicRules {
 		
 		List<TypedDependency> tdl = parser.getDependencies(pt);
 		for(TypedDependency tddd:tdl){
-			App.log(tddd);
+			App.log(Modules.SYSTEM,tddd);
 			/*App.log(tddd.dep().value());
 			App.log(tddd.gov().value());
 			App.log(tddd.reln());*/
 			ksession.insert(new TypedDep(tddd.reln().toString(),new Word(tddd.gov().index(),tddd.gov().label().tag(),tddd.gov().value()),new Word(tddd.dep().index(),tddd.dep().label().tag(),tddd.dep().value())));
 
 		}
-		App.log("FOL::");
+		App.log(Modules.SYSTEM,"FOL::");
 		ksession.fireAllRules();
 		
 		for(Object o:ksession.getObjects()){
@@ -95,10 +96,10 @@ public class TestBasicRules {
 				String[] acts = td.getActions();
 				if(acts!=null)
 				for(String act: acts){
-				App.log(act);
+				App.log(Modules.SYSTEM,act);
 				}
 				if(td.getExperts().size()>0)
-				App.log(td.getExperts());
+				App.log(Modules.SYSTEM,td.getExperts());
 			}
 		}
 	 }
@@ -110,10 +111,10 @@ public class TestBasicRules {
 			
 			List<TypedDependency> tdl = parser.getDependencies(pt);
 			for(TypedDependency tddd:tdl){
-				App.log(tddd);
-				App.log(tddd.dep().value());
-				App.log(tddd.gov().value());
-				App.log(tddd.reln());
+				App.log(Modules.SYSTEM,tddd);
+				App.log(Modules.SYSTEM,tddd.dep().value());
+				App.log(Modules.SYSTEM,tddd.gov().value());
+				App.log(Modules.SYSTEM,tddd.reln());
 
 			}
 			
