@@ -8,16 +8,37 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>JSP Page</title>
-    </head> 
+        <title>Prototype Login</title>
+        <link rel="stylesheet" type="text/css" href="css/style.css">
+    </head>
     <body>
-        <form method="POST" action="admin">
-            <fieldset>
-                <label for="un">Username: <input type="text" id="un" name="username" size="15" /></label><br />
-                <label for="pw">Password: <input type="text" id="pw" name="password" size="15" /></label><br />
-                <p><input type="submit" value="Login" /></p>
-            </fieldset>    
-        </form>
+        <div id="container"> 
+            <div id="loginForm">
+                <h1>Dietfix - Login</h1>
+                <form id="loginContent">
+                    <table>
+                        <tr>
+                            <td class="label">Username:</td>
+                            <td><input type="text" name="usrname" class="field"></td>
+                        </tr>
+                        <tr>
+                            <td class="label">Password: </td>
+                            <td><input type="password" name="pw" class="field"></td>
+                        </tr>
+                    </table>
+                    <div class="buttonFields">
+                        <input type="submit" value="Login">
+                        <input type="button" value="Register"> 
+                    </div>
+                    <div class="error">
+                        <p>Invalid Username or Password</p>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <script type="text/javascript" src="js/jquery.min.js"></script>
+        <script type="text/javascript" src="js/jquery-ui.min.js"></script>
+        <script type="text/javascript" src="js/login.js"></script>
     </body>
 </html>
