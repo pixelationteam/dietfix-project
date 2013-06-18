@@ -21,12 +21,12 @@
 				</div>
 
 				<ul class="nav tab-options">
-					<a class="first" href="#"><li class="selected"><i class="icon-search icon-home"></i>Dashboard</li></a>
-					<a class="middle" href="#"><li><i class="icon-search icon-comment "></i>Consult Expert</li></a>
-					<a class="middle" href="#"><li><i class="icon-search icon-book "></i>Diet Plan</li></a>
-					<a class="middle" href="#"><li><i class="icon-search icon-user "></i>Profile</li></a>
-					<a class="middle" href="#"><li><i class="icon-search icon-calendar "></i>Schedule</li></a>
-					<a class="last" href="#"><li><i class="icon-search icon-off"></i>Log-out</li></a>
+					<a href="#"><li class="selected"><i class="icon-search icon-home"></i>Dashboard</li></a>
+					<a href="#"><li><i class="icon-search icon-comment "></i>Consult Expert</li></a>
+					<a href="#"><li><i class="icon-search icon-book "></i>Diet Plan</li></a>
+					<a href="#"><li><i class="icon-search icon-user "></i>Profile</li></a>
+					<a href="#"><li><i class="icon-search icon-calendar "></i>Schedule</li></a>
+					<a href="#"><li><i class="icon-search icon-off"></i>Log-out</li></a>
 				</ul>
 			</nav>
 			<div class="span10 main-section">

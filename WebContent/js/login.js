@@ -12,7 +12,7 @@ $(document).ready(function () {
 			data: $('#loginContent').serialize(),
 			success: function(data) {
 				if(data.isValid == true) {
-					window.location = 'dashboard';
+					window.location = 'dashboard?pageId=0';
 				}else {
 					$('.error').slideDown('slow');
 				}
