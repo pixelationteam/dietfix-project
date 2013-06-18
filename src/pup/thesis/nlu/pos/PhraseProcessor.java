@@ -23,6 +23,7 @@ import pup.thesis.util.ClientData;
 import simplenlg.features.Feature;
 import simplenlg.features.Form;
 import simplenlg.features.Person;
+import simplenlg.features.Tense;
 import simplenlg.framework.CoordinatedPhraseElement;
 import simplenlg.framework.NLGFactory;
 import simplenlg.phrasespec.NPPhraseSpec;
@@ -43,6 +44,10 @@ public class PhraseProcessor implements Serializable{
 	private final HashMap<Integer,String> mappings;
 	private final NLGFactory nfact;
 	private final ClientData cdata;
+	
+	private Tense tense = Tense.PRESENT;
+	private Form form = Form.NORMAL;
+	
 	public PhraseProcessor(ClientData cdata,TypedDep[] td,HashMap<Integer,String> maps){
 		nfact = DietfixServer.getTextGenerator().getNLGFactory();
 		dependencies = td;
@@ -51,10 +56,44 @@ public class PhraseProcessor implements Serializable{
 		this.cdata = cdata;
 	}
 	
+
 	public TypedDep[] dependencies(){
 		return dependencies;
 	}
-	public void addNewSubject(Word verb,Word subj){
+	
+	public void addAux(Word target,Word aux){
+		SPhraseSpec sp = specs.get(target.getIndex());
+		sp.addPreModifier(aux.getLemma());
+		if(aux.getLemma().equalsIgnoreCase("is")||aux.getLemma().equalsIgnoreCase("are")){
+			tense = Tense.PRESENT;
+			form = Form.PRESENT_PARTICIPLE;
+		}
+		else if(aux.getLemma().equalsIgnoreCase("was")||aux.getLemma().equalsIgnoreCase("were")){
+			tense = Tense.PAST;
+		}
+		else if(aux.getLemma().equalsIgnoreCase("will")||aux.getLemma().equalsIgnoreCase("shall")){
+			tense = Tense.FUTURE;
+		}
+		else if(aux.getLemma().equalsIgnoreCase("has")||aux.getLemma().equalsIgnoreCase("have")){
+			form = Form.PAST_PARTICIPLE;
+		}		
+	}
+	
+	public void addComplement(Word target,Word obj){
+		NPPhraseSpec np = nfact.createNounPhrase(obj.getLemma());
+		SPhraseSpec sp = specs.get(target.getIndex());
+		sp.addComplement(np);
+		
+		npspecs.put(obj.getIndex(), np);
+	}
+	
+	public void addCop(Word target,Word obj){
+		SPhraseSpec sp = specs.get(target.getIndex());
+		sp.addPreModifier(obj.getLemma());
+	}
+	
+	public void addNewSubject(Word topic,Word subj){
+		
 		SPhraseSpec spe = nfact.createClause();
 		spe.setSubject(nfact.createCoordinatedPhrase());
 		spe.setVerb(nfact.createCoordinatedPhrase());
@@ -69,7 +108,7 @@ public class PhraseProcessor implements Serializable{
 		}
 		NPPhraseSpec np = nfact.createNounPhrase(word);
 		
-		VPPhraseSpec vp = nfact.createVerbPhrase(verb.getLemma());
+		VPPhraseSpec vp = nfact.createVerbPhrase(topic.getLemma());
 		
 		((CoordinatedPhraseElement) spe.getSubject()).addCoordinate(np);
 		((CoordinatedPhraseElement) spe.getVerb()).addCoordinate(vp);
@@ -78,9 +117,11 @@ public class PhraseProcessor implements Serializable{
 		//spe.setFeature(Feature.MODAL			,"should"  );
 		//spe.setFeature(Feature.FORM, Form.IMPERATIVE);
 		npspecs.put(subj.getIndex(), np);
-		vpspecs.put(verb.getIndex(), vp);
-		specs.put(verb.getIndex(), spe);
+		vpspecs.put(topic.getIndex(), vp);
+		specs.put(topic.getIndex(), spe);
 	}
+	
+	
 	private String parseVariable(String s){
 		
 		String[] s2 = s.split(":");
@@ -163,7 +204,8 @@ public class PhraseProcessor implements Serializable{
 		ArrayList<SPhraseSpec> sps = new ArrayList<SPhraseSpec>();
 		for(SPhraseSpec ss : specs.values()){
 			ss.setFeature(Feature.PERSON, Person.SECOND);
-			
+			ss.setFeature(Feature.TENSE,tense);
+			ss.setFeature(Feature.FORM,form);
 			sps.add(ss);
 			
 		}

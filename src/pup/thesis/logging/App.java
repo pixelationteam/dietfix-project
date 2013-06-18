@@ -4,15 +4,24 @@
  */
 package pup.thesis.logging;
 
+
 /**
  *
  * @author Dell
  */
 public class App {
-    public static void log(String source,Object e){
-        System.out.println(String.format("%s => %s", source,e));
+	StringBuilder NLU,IR,NLG;
+	String input;
+    public static void log(Modules mod, String source,Object e){
+    	String ptext = String.format("%s => %s", source,e);
+        System.out.println(String.format("[%s] : %s",mod, ptext));
     }
-    public static void log(Object e){
-    	System.out.println(e);
+    
+    public static void log(Modules all,Object e){
+    	System.out.println(String.format("[%s] : %s", all,e));
+    }
+    
+    public static void log(Object s){
+    	System.out.println(String.format("[%s] : %s", Modules.SYSTEM,s));
     }
 }

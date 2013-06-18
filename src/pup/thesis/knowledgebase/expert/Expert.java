@@ -24,6 +24,7 @@ import assets.dietfix.enums.DietfixAnsAnsexpert;
 import pup.thesis.helper.MysqlHelper;
 import pup.thesis.knowledgebase.AnswerData;
 import pup.thesis.logging.App;
+import pup.thesis.logging.Modules;
 import pup.thesis.nlu.pos.PhraseProcessor;
 import pup.thesis.nlu.pos.TypedDep;
 import pup.thesis.util.ClientData;
@@ -54,7 +55,7 @@ public abstract class Expert {
 	}
 	
 	protected void log(String msg){
-		App.log(String.format("Expert.%s", expert),msg);
+		App.log(Modules.INFORMATIONI_RETRIEVAL,String.format("Expert.%s", expert),msg);
 	}
 	
 	
@@ -112,7 +113,7 @@ public abstract class Expert {
 			String expertstr = (String) resrec.getValue(DIETFIX.DIETFIX_ANS.ANSEXPERT.getName());
 			tdset.add(new ExpertAnswer(resrec.getValue(DIETFIX.DIETFIX_ANS.ANSID),resrec.getValue(DIETFIX.DIETFIX_ANS.ANSDESC),Experts.valueOf(expertstr),this));
 		}
-		App.log(expert.name()+"[Query]:",rq.getSQL(true));
+		App.log(Modules.INFORMATIONI_RETRIEVAL,expert.name()+"[Query]:",rq.getSQL(true));
 		return tdset;
 	}
 	

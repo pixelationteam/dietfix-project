@@ -20,6 +20,7 @@ import pup.thesis.knowledgebase.expert.Dietitian;
 import pup.thesis.knowledgebase.expert.Factor;
 import pup.thesis.knowledgebase.expert.FoodCategory;
 import pup.thesis.logging.App;
+import pup.thesis.logging.Modules;
 import pup.thesis.nlu.CoreParser;
 import pup.thesis.util.ServerPage;
 import pup.thesis.util.mysql.SafeConnection;
@@ -43,16 +44,16 @@ public class FoodsPage extends ServerPage{
 		dietitian = new Dietitian(this.getClientData());
         } catch (ClassNotFoundException ex) {
             addError("Class not found on parser:"+ex.getMessage());
-            App.log("FooosPage:49", ex.getMessage());
+            App.log(Modules.SYSTEM,"FooosPage:49", ex.getMessage());
         } catch (InstantiationException ex) {
             addError("Instantiation exception:"+ex.getMessage());
-            App.log("FooosPage:51", ex.getMessage());
+            App.log(Modules.SYSTEM,"FooosPage:51", ex.getMessage());
         } catch (IllegalAccessException ex) {
             addError("IllegalAccessException:"+ex.getMessage());
-            App.log("FooosPage:54", ex.getMessage());
+            App.log(Modules.SYSTEM,"FooosPage:54", ex.getMessage());
         } catch (SQLException ex) {
             addError("SQL Exception:"+ex.getMessage());
-            App.log("FooosPage:58", ex.getMessage());
+            App.log(Modules.SYSTEM,"FooosPage:58", ex.getMessage());
         }
 	}
     
@@ -80,7 +81,7 @@ public class FoodsPage extends ServerPage{
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-			App.log("Error:"+e.getMessage());
+			App.log(Modules.SYSTEM,"Error:"+e.getMessage());
 		}
        
          

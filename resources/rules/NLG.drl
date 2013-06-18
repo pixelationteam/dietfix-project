@@ -5,13 +5,41 @@ import pup.thesis.nlu.pos.TypedDep;
 import pup.thesis.nlu.pos.Word;
 import pup.thesis.nlu.pos.PhraseProcessor;
 import pup.thesis.logging.App;
+import pup.thesis.logging.Modules;
+
+rule "Rule for cop"
+    when
+    	$sent : PhraseProcessor( $dependencies : dependencies() )
+    	$tdep : TypedDep( reln() == "cop" ) from $dependencies
+    then
+    	App.log(Modules.TEXT_GENERATION,"DRL[cop]:"+$tdep.toString(), "Adding copula["+$tdep.dep()+"] for: "+$tdep.gov());
+        $sent.addCop($tdep.gov(),$tdep.dep());
+end
+
+rule "Rule for aux"
+    when
+    	$sent : PhraseProcessor( $dependencies : dependencies() )
+    	$tdep : TypedDep( reln() == "aux" ) from $dependencies
+    then
+    	App.log(Modules.TEXT_GENERATION,"DRL[aux]:"+$tdep.toString(), "Adding auxillary["+$tdep.dep()+"] for: "+$tdep.gov());
+        $sent.addAux($tdep.gov(),$tdep.dep());
+end
+
+rule "Rule for advmod"
+    when
+    	$sent : PhraseProcessor( $dependencies : dependencies() )
+    	$tdep : TypedDep( reln() == "advmod" ) from $dependencies
+    then
+    	App.log(Modules.TEXT_GENERATION,"DRL[advmod]:"+$tdep.toString(), "Adding modifier["+$tdep.dep()+"] for: "+$tdep.gov());
+        $sent.addModifier($tdep.gov(),$tdep.dep());
+end
 
 rule "Rule for amod"
     when
     	$sent : PhraseProcessor( $dependencies : dependencies() )
     	$tdep : TypedDep( reln() == "amod" ) from $dependencies
     then
-    	App.log("DRL[amod]:"+$tdep.toString(), "Adding modifier["+$tdep.dep()+"] for: "+$tdep.gov());
+    	App.log(Modules.TEXT_GENERATION,"DRL[amod]:"+$tdep.toString(), "Adding modifier["+$tdep.dep()+"] for: "+$tdep.gov());
         $sent.addModifier($tdep.gov(),$tdep.dep());
 end
 
@@ -20,16 +48,26 @@ rule "Rule for det"
     	$sent : PhraseProcessor( $dependencies : dependencies() )
     	$tdep : TypedDep( reln() == "det" ) from $dependencies
     then
-		App.log("DRL[det]:"+$tdep.toString(), "Adding determiner["+$tdep.dep()+"] for: "+$tdep.gov());
+		App.log(Modules.TEXT_GENERATION,"DRL[det]:"+$tdep.toString(), "Adding determiner["+$tdep.dep()+"] for: "+$tdep.gov());
         $sent.addNounDeterminer($tdep.gov(),$tdep.dep());
 end
+
+rule "Rule for acomp"
+    when
+    	$sent : PhraseProcessor( $dependencies : dependencies() )
+    	$tdep : TypedDep( reln() == "acomp" ) from $dependencies
+    then
+    	App.log(Modules.TEXT_GENERATION,"DRL[acomp]:"+$tdep.toString(), "Adding indirect["+$tdep.dep()+"] object for: "+$tdep.gov());
+        $sent.addComplement($tdep.gov(),$tdep.dep());
+end
+
 
 rule "Rule for iobj"
     when
     	$sent : PhraseProcessor( $dependencies : dependencies() )
     	$tdep : TypedDep( reln() == "iobj" ) from $dependencies
     then
-    	App.log("DRL[iobj]:"+$tdep.toString(), "Adding indirect["+$tdep.dep()+"] object for: "+$tdep.gov());
+    	App.log(Modules.TEXT_GENERATION,"DRL[iobj]:"+$tdep.toString(), "Adding indirect["+$tdep.dep()+"] object for: "+$tdep.gov());
         $sent.setSpiObject($tdep.gov(),$tdep.dep());
 end
 
@@ -38,7 +76,7 @@ rule "Rule for dobj"
     	$sent : PhraseProcessor( $dependencies : dependencies() )
     	$tdep : TypedDep( reln() == "dobj" ) from $dependencies
     then
-    	App.log("DRL[dobj]:"+$tdep.toString(), "Adding directobject["+$tdep.dep()+"] for: "+$tdep.gov());
+    	App.log(Modules.TEXT_GENERATION,"DRL[dobj]:"+$tdep.toString(), "Adding directobject["+$tdep.dep()+"] for: "+$tdep.gov());
         $sent.setSpdObject($tdep.gov(),$tdep.dep());
 end
 
@@ -47,7 +85,7 @@ rule "Rule for nsubj"
     	$sent : PhraseProcessor( $dependencies : dependencies() )
     	$tdep : TypedDep( reln() == "nsubj" ) from $dependencies
     then
-    	App.log("DRL[nsubj]:"+$tdep.toString(), "Adding subject["+$tdep.dep()+"] for: "+$tdep.gov());
+    	App.log(Modules.TEXT_GENERATION,"DRL[nsubj]:"+$tdep.toString(), "Adding subject["+$tdep.dep()+"] for: "+$tdep.gov());
         $sent.addNewSubject($tdep.gov(),$tdep.dep());
 end
 

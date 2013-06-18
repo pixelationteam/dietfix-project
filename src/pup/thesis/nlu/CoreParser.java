@@ -110,7 +110,9 @@ public class CoreParser {
 		TreebankLanguagePack tlp = new PennTreebankLanguagePack();
 		GrammaticalStructureFactory gsf = tlp.grammaticalStructureFactory();
 		GrammaticalStructure gs = gsf.newGrammaticalStructure(parseTree);
-		return gs.typedDependenciesCCprocessed();
+		return gs.typedDependenciesCCprocessed(true);
 	}
+	
+	
 	
 }

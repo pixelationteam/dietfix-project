@@ -7,6 +7,7 @@ import javax.servlet.ServletRequestListener;
 import javax.servlet.http.HttpServletRequest;
 
 import pup.thesis.logging.App;
+import pup.thesis.logging.Modules;
 import pup.thesis.util.ClientData;
 import pup.thesis.util.mysql.DBQuerier;
 
@@ -19,7 +20,7 @@ public class DietfixServletListener implements ServletRequestListener {
 		ClientData cdata = new ClientData();
 		
 		arg0.getServletRequest().setAttribute("clientdata", cdata);
-		App.log("Request Object created At:" + new java.util.Date());
+		App.log(Modules.SYSTEM,"Request Object created At:" + new java.util.Date());
 	}
 
 	@Override
@@ -28,12 +29,12 @@ public class DietfixServletListener implements ServletRequestListener {
 				.getAttribute("clientdata");
 		try {
 			int i = clientdata.getQuerier().closeAllConnection();
-			App.log("DietfixServletListener", i + " connections closed");
+			App.log(Modules.SYSTEM,"DietfixServletListener", i + " connections closed");
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
-			App.log("Failed to close connections:", e.getMessage());
+			App.log(Modules.SYSTEM,"Failed to close connections:", e.getMessage());
 		}
-				App.log("The Request object destroyed at  :" + new java.util.Date());
+				App.log(Modules.SYSTEM,"The Request object destroyed at  :" + new java.util.Date());
 	}
 
 }

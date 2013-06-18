@@ -52,8 +52,10 @@ import pup.thesis.knowledgebase.expert.ExpertAnswer;
 import pup.thesis.knowledgebase.expert.Experts;
 import pup.thesis.knowledgebase.expert.FitnessInstructor;
 import pup.thesis.knowledgebase.expert.Food;
+import pup.thesis.knowledgebase.expert.Nutrient;
 import pup.thesis.knowledgebase.expert.Nutrients;
 import pup.thesis.logging.App;
+import pup.thesis.logging.Modules;
 import pup.thesis.nlu.CoreParser;
 import pup.thesis.nlu.pos.TypedDep;
 import pup.thesis.nlu.pos.PhraseProcessor;
@@ -113,7 +115,7 @@ public class Program {
 		TypedDep[] tda = new TypedDep[tdep.size()];
 		for (int i = 0; i < tdep.size(); i++) {
 			tda[i] = new TypedDep(tdep.get(i));
-			App.log(tda[i].toString());
+			App.log(Modules.SYSTEM,tda[i].toString());
 		}
 
 		AnswerData ad= new AnswerData(tda,hm);
@@ -141,9 +143,27 @@ public class Program {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		App.log("Done");
+		App.log(Modules.SYSTEM,"Done");
 	}
+
 	
+	private static void subTest(){
+		ClientData cdata = new ClientData();
+		try {
+			Dietitian dt = new Dietitian(cdata);
+			Food afood = dt.getFood("93600");
+			App.log(Modules.SYSTEM, afood.getDescription());
+			for(Nutrient nut: afood.getNutrients()){
+				App.log(nut.getName()+":"+nut.getValue());
+			}
+			App.log(afood.getNutrients().size());
+		} catch (ClassNotFoundException | InstantiationException
+				| IllegalAccessException | SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}
 	private static void testInsert() {
 		/*KeyTagSet kts = new KeyTagSet();
 		kts.addKeyTag(new KeyTag(1,"FOOD"));
@@ -173,7 +193,8 @@ public class Program {
 
 	public static void main(String... args) throws JWNLException {
 
-		testNLG3();System.exit(0);
+		//subTest();System.exit(0);
+		//testNLG3();System.exit(0);
 		//testInsert();System.exit(0);
 		ClientData cdata = new ClientData();
 		
@@ -182,11 +203,11 @@ public class Program {
 			DietfixServer.start();
 		}
 		//Tree inputpt = DietfixServer.getParser().getParseTree("What should I do to lose weight fast?");
-		Tree inputpt = DietfixServer.getNLUStarter().startNLUModule("What to eat if I am losing blood?");
+		Tree inputpt = DietfixServer.getNLUStarter().startNLUModule("What are children?");
 		
 		try {
-			App.log("");
-			App.log("Press any key to proceed..");
+			App.log(Modules.SYSTEM,"");
+			App.log(Modules.SYSTEM,"Press any key to proceed..");
 			System.in.read();
 		} catch (IOException e1) {
 			// TODO Auto-generated catch block
@@ -202,10 +223,10 @@ public class Program {
 			e.printStackTrace();
 		}
 		String txt = DietfixServer.getTextGenerator().generateText(cdata, sh);
-		App.log("");
-		App.log("");
-		App.log("");
-		App.log("RESPONSE",txt);
+		App.log(Modules.SYSTEM,"");
+		App.log(Modules.SYSTEM,"");
+		App.log(Modules.SYSTEM,"");
+		App.log(Modules.SYSTEM,"RESPONSE",txt);
 		
 		
 		
@@ -223,7 +244,7 @@ public class Program {
 
 	private static void testNLG3(){
 		
-		String input = "Strawberry is sweet."	;
+		String input = "Bill is big, huge and honest."	;
 		if(!DietfixServer.isRunning()){
 			DietfixServer.start();
 		}
@@ -232,7 +253,7 @@ public class Program {
 		int i = 0;
 		for(TypedDependency tdp : dtp){
 			alist[i] = new TypedDep(tdp);
-			App.log(alist[i]);
+			App.log(Modules.SYSTEM,alist[i]);
 			i++;
 		}
 		
@@ -253,7 +274,7 @@ public class Program {
 				for (SPhraseSpec specsnt : ph.getSPhrases()) {
 					String res = DietfixServer.getTextGenerator().getRealiser()
 							.realiseSentence(specsnt);
-					App.log(res);
+					App.log(Modules.SYSTEM,res);
 				}
 			}
 
@@ -281,7 +302,7 @@ public class Program {
 			ResultSet rs = st
 					.executeQuery("SHOW FULL TABLES IN `sr25food` WHERE TABLE_TYPE LIKE 'VIEW';");
 			while (rs.next()) {
-				App.log("p:", rs.getString("Tables_in_sr25food"));
+				App.log(Modules.SYSTEM,"p:", rs.getString("Tables_in_sr25food"));
 			}
 		} catch (ClassNotFoundException | InstantiationException
 				| IllegalAccessException | SQLException e1) {
@@ -296,23 +317,23 @@ public class Program {
 
 			ResultQuery<Record> rq = f.generateQuery();
 			String s = rq.getSQL(true);
-			App.log("SQL", s);
+			App.log(Modules.SYSTEM,"SQL", s);
 			List<Food> fd = dt.queryFood(rq.fetch());
 
 			for (Food fdd : fd) {
-				App.log("FOOD:",
+				App.log(Modules.SYSTEM,"FOOD:",
 						fdd.getNutrients().size() + ":"
 								+ fdd.getNutrient(Nutrients.LIPID) + ":"
 								+ fdd.getID() + ":" + fdd.getDescription());
 				if (fdd.getWeight1() != null) {
-					App.log("WEIGHT1", fdd.getWeight1().getUnit() + ":"
+					App.log(Modules.SYSTEM,"WEIGHT1", fdd.getWeight1().getUnit() + ":"
 							+ fdd.getWeight1().getValue());
 				}
 				if (fdd.getWeight2() != null) {
-					App.log("WEIGHT2", fdd.getWeight2().getUnit() + ":"
+					App.log(Modules.SYSTEM,"WEIGHT2", fdd.getWeight2().getUnit() + ":"
 							+ fdd.getWeight2().getValue());
 				}
-				App.log("CAT:",
+				App.log(Modules.SYSTEM,"CAT:",
 						fdd.getFoodCategory().id + ":"
 								+ fdd.getFoodCategory().description);
 			}
@@ -389,11 +410,13 @@ public class Program {
 		CoordinatedPhraseElement subjects = nlgFactory.createCoordinatedPhrase();
 		CoordinatedPhraseElement verbs = nlgFactory.createCoordinatedPhrase();
 		CoordinatedPhraseElement objects = nlgFactory.createCoordinatedPhrase();
-		subjects.addCoordinate("He");
-		verbs.addCoordinate("is");
-		objects.addCoordinate("happy");
-
-		p.setSubject(subjects);
+		subjects.addCoordinate("Mary");
+		verbs.addCoordinate("chase");
+		verbs.addCoordinate("jump");
+		objects.addCoordinate("the monkey");
+		VPPhraseSpec vp = nlgFactory.createVerbPhrase("help");
+		verbs.addCoordinate(vp);
+		p.setSubject("Mary");
 		p.setVerb(verbs);
 		p.setObject(objects);
 		//p.setObject("everyday");
@@ -413,8 +436,7 @@ public class Program {
 		//Create an instance of Aggregator
 		
 		//now pass a list of NLGElements (usually sentences) to the aggregator, which runs the rules and returns the outcome
-		
-		App.log(realiser.realiseSentence(p));
+		App.log(Modules.SYSTEM,realiser.realiseSentence(p));
 
 		System.exit(1);
 	}
@@ -511,7 +533,7 @@ public class Program {
 				s3 }));
 		for (NLGElement nlgElement : enl) {
 			nlgElement.setFeature(Feature.TENSE, Tense.PAST);
-			App.log("", realiser.realiseSentence(nlgElement));
+			App.log(Modules.SYSTEM,"", realiser.realiseSentence(nlgElement));
 
 		}
 	}

@@ -9,6 +9,7 @@ import org.drools.runtime.StatefulKnowledgeSession;
 import pup.thesis.knowledgebase.AnswerData;
 import pup.thesis.knowledgebase.expert.Experts;
 import pup.thesis.logging.App;
+import pup.thesis.logging.Modules;
 import pup.thesis.nlu.pos.PhraseProcessor;
 import pup.thesis.nlu.pos.TypedDep;
 import pup.thesis.server.DietfixServer;
@@ -49,19 +50,19 @@ public class TextGenerator {
 
 		StatefulKnowledgeSession ksession = DietfixServer.getKBase()
 				.getNLGKBase().newStatefulKnowledgeSession();
-		App.log("");
-		App.log("");
-		App.log("");
-		App.log("<<<===================== TEXT GENERATION =========================>>>");
-		App.log("");
+		App.log(Modules.TEXT_GENERATION,"");
+		App.log(Modules.TEXT_GENERATION,"");
+		App.log(Modules.TEXT_GENERATION,"");
+		App.log(Modules.TEXT_GENERATION,"<<<===================== TEXT GENERATION =========================>>>");
+		App.log(Modules.TEXT_GENERATION,"");
 		StringBuilder response = new StringBuilder();
 		ArrayList<PhraseProcessor> phrases = new ArrayList<PhraseProcessor>();
 		for (List<AnswerData> adata : hmap.values()) {
 			int i = 0;
 			for (AnswerData answer : adata) {
-				App.log("Query Result: " + (++i));
+				App.log(Modules.TEXT_GENERATION,"Query Result: " + (++i));
 				for (TypedDep tdep : answer.dependencies) {
-					App.log(tdep.reln() + "(" + tdep.gov() + "," + tdep.dep()
+					App.log(Modules.TEXT_GENERATION,tdep.reln() + "(" + tdep.gov() + "," + tdep.dep()
 							+ ")");
 				}
 				PhraseProcessor asnt = new PhraseProcessor(cdata,
@@ -69,20 +70,20 @@ public class TextGenerator {
 				
 				phrases.add(asnt);
 				//ksession.insert(asnt);
-				App.log("");
+				App.log(Modules.TEXT_GENERATION,"");
 			}
 		}
 		
 		//   TEXT AGGREGATION HERE
 		
-		App.log("LEXICALIZATION..");
-		App.log(phrases.size());
+		App.log(Modules.TEXT_GENERATION,"LEXICALIZATION..");
+		App.log(Modules.TEXT_GENERATION,phrases.size());
 		for(PhraseProcessor phr: phrases){
 			ksession.insert(phr);
 		}
 		ksession.fireAllRules();
-		App.log("");
-		App.log("SURFACE REALIZATION..");
+		App.log(Modules.TEXT_GENERATION,"");
+		App.log(Modules.TEXT_GENERATION,"SURFACE REALIZATION..");
 		for (Object pproc : ksession.getObjects())
 			if (pproc instanceof PhraseProcessor) {
 				PhraseProcessor ph = (PhraseProcessor) pproc;

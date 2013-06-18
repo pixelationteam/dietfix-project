@@ -24,6 +24,7 @@ import pup.thesis.knowledgebase.expert.Experts;
 import pup.thesis.knowledgebase.expert.FitnessInstructor;
 import pup.thesis.knowledgebase.expert.Nutritionist;
 import pup.thesis.logging.App;
+import pup.thesis.logging.Modules;
 import pup.thesis.nlu.CoreParser;
 import pup.thesis.nlu.pos.TypedDep;
 import pup.thesis.nlu.pos.Word;
@@ -76,14 +77,14 @@ public class KBase {
 	public HashMap<Experts, List<AnswerData>> process(ClientData cdata,List<TypedDep> tdep)
 			throws Exception {
 
-		App.log("");
-		App.log("");
-		App.log("");
-		App.log("<<<===================== INFORMATION RETRIEVAL =========================>>>");
-		App.log("");
+		App.log(Modules.INFORMATIONI_RETRIEVAL,"");
+		App.log(Modules.INFORMATIONI_RETRIEVAL,"");
+		App.log(Modules.INFORMATIONI_RETRIEVAL,"");
+		App.log(Modules.INFORMATIONI_RETRIEVAL,"<<<===================== INFORMATION RETRIEVAL =========================>>>");
+		App.log(Modules.INFORMATIONI_RETRIEVAL,"");
 		HashMap<Experts,List<AnswerData>> hret = new HashMap<Experts,List<AnswerData>>();
 		HashMap<Experts, List<String>> hmap = qfilter.filter(tdep);
-		App.log("");
+		App.log(Modules.INFORMATIONI_RETRIEVAL,"");
 	
 
 		for (Experts exp : hmap.keySet()) {
@@ -108,19 +109,19 @@ public class KBase {
 			List<ExpertAnswer> lexp = expert.getAnswers(keywords);
 			ArrayList<AnswerData> adata = new ArrayList<AnswerData>();
 
-			App.log("");
-			App.log("Query Result", lexp.size());
-			App.log("-------------------------------------------------------");
+			App.log(Modules.INFORMATIONI_RETRIEVAL,"");
+			App.log(Modules.INFORMATIONI_RETRIEVAL,"Query Result", lexp.size());
+			App.log(Modules.INFORMATIONI_RETRIEVAL,"-------------------------------------------------------");
 			int i = 0;
 			for (ExpertAnswer tds : lexp) {
-				App.log("Result["+i+"] ID",tds.getId());
-				App.log("Result["+i+"] Data",tds.getDesc());
+				App.log(Modules.INFORMATIONI_RETRIEVAL,"Result["+i+"] ID",tds.getId());
+				App.log(Modules.INFORMATIONI_RETRIEVAL,"Result["+i+"] Data",tds.getDesc());
 				AnswerData ad = tds.getAnswerData();
 				adata.add(ad);
 				i++;
-				App.log("");
+				App.log(Modules.INFORMATIONI_RETRIEVAL,"");
 			}
-			App.log("");
+			App.log(Modules.INFORMATIONI_RETRIEVAL,"");
 			hret.put(exp, adata);
 		}
 
@@ -153,7 +154,7 @@ public class KBase {
 		TypedDep[] tda = new TypedDep[tdep.size()];
 		for (int i = 0; i < tdep.size(); i++) {
 			tda[i] = new TypedDep(tdep.get(i));
-			App.log(tda[i].toString());
+			App.log(Modules.INFORMATIONI_RETRIEVAL,tda[i].toString());
 		}
 
 		AnswerData ad = new AnswerData(tda, hm);
@@ -182,7 +183,7 @@ public class KBase {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		App.log("Done");
+		App.log(Modules.INFORMATIONI_RETRIEVAL,"Done");
 	}
 
 	public static AnswerData createAnswerData(Tree parsetree,
@@ -190,7 +191,7 @@ public class KBase {
 		List<CoreLabel> wlabel = parsetree.taggedLabeledYield();
 		for (CoreLabel lbl : wlabel) {
 			if (map.containsKey(lbl.index())) {
-				App.log(lbl.tag());
+				App.log(Modules.INFORMATIONI_RETRIEVAL,lbl.tag());
 			}
 		}
 		return null;
