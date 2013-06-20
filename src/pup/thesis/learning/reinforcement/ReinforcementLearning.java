@@ -12,14 +12,32 @@ import net.didion.jwnl.data.PointerType;
 import net.didion.jwnl.data.relationship.Relationship;
 import pup.thesis.helper.JwnlHelper;
 import pup.thesis.helper.MysqlHelper;
-import pup.thesis.logging.App;
 import pup.thesis.nlu.RelatedWord;
+import edu.cmu.lti.lexical_db.ILexicalDatabase;
+import edu.cmu.lti.lexical_db.NictWordNet;
+import edu.cmu.lti.lexical_db.data.Concept;
+import edu.cmu.lti.ws4j.RelatednessCalculator;
+import edu.cmu.lti.ws4j.impl.HirstStOnge;
+import edu.cmu.lti.ws4j.impl.JiangConrath;
+import edu.cmu.lti.ws4j.impl.LeacockChodorow;
+import edu.cmu.lti.ws4j.impl.Lesk;
+import edu.cmu.lti.ws4j.impl.Lin;
+import edu.cmu.lti.ws4j.impl.Path;
+import edu.cmu.lti.ws4j.impl.Resnik;
+import edu.cmu.lti.ws4j.impl.WuPalmer;
 
 public abstract class ReinforcementLearning {
 	
 	private JwnlHelper helper;
 	private MysqlHelper sqlHelper;
 	private Reward reward;
+	
+	private ILexicalDatabase db = new NictWordNet();
+	
+	private RelatednessCalculator[] _rc = {
+			 new HirstStOnge(db), new LeacockChodorow(db), new Lesk(db),  new WuPalmer(db), 
+             new Resnik(db), new JiangConrath(db), new Lin(db), new Path(db)
+	};
 	
 	/**
 	 * 
@@ -42,7 +60,7 @@ public abstract class ReinforcementLearning {
 		}
 		String sTemp = opti.getInitState().getLabel();
 		POS pTemp = opti.getInitState().getTag();
-		String aTemp = opti.getEndState().getAction();
+		String aTemp = opti.getInitState().getId();
 		
 		//learn the freaking word
 		//still no idea about the action thingy here...
@@ -67,22 +85,26 @@ public abstract class ReinforcementLearning {
 	 */
 	public Policy evaluatePolicy(ArrayList<Policy> policies) {
 		Policy optimizedPolicy = new Policy();
-		int temp = 100;
-		
+		int ctr = 0;
+		double temp = 0;
+		double max = 0;
 		Iterator<Policy> i = policies.iterator();
 		
 		while(i.hasNext()) {
 			Policy p = i.next();
 			
-			if(p.getReward() == -1) {
-				continue;
+			if(ctr == 0) {
+				max = p.getReward();
+				ctr++;
 			}
 			else {
-				if(temp > p.getReward()) {
+				if(max < temp) {
+					max = temp;
 					optimizedPolicy = p;
-					temp = p.getReward();
 				}
 			}
+			
+			
 		}
 		
 		return optimizedPolicy;
@@ -113,6 +135,7 @@ public abstract class ReinforcementLearning {
 		
 		while(set.next()) {
 			RelatedWord rlWord = new RelatedWord();
+			rlWord.setId(set.getString(1));
 			rlWord.setLabel(set.getString(2));
 			rlWord.setTag(helper.getPOS(set.getString(3)));
 			rlWord.setAction(set.getString(4));
@@ -201,6 +224,47 @@ public abstract class ReinforcementLearning {
 	
 	/**
 	 * 
+	 * 
+	 * @param a
+	 * @return
+	 */
+	public double getAverage(double[] a) {
+		double percent = 0;
+		for(int i = 0; i < a.length; i++) {
+			percent += a[i];
+		}
+		return (percent /= a.length);
+	}
+	
+	/**
+	 * 
+	 * 
+	 * @param word1
+	 * @param word2
+	 * @return
+	 */
+	public double getPercentageRelativity(String word1, String word2) {
+
+		double percent = 0;
+		double score[] = new double[8];
+		int ctr = 0;
+		
+		for(RelatednessCalculator rc : _rc) {
+			double s = rc.calcRelatednessOfWords(word1, word2);
+			score[ctr] = s;
+			ctr++;
+		}
+		
+		percent = getAverage(score);
+		return percent;
+	}
+	
+	public void printPercentRelatedNess(String word1, String id, String word2, double percent) {		
+		System.out.println(word1 + " - " + id + " " + word2 + " = " + percent);
+	}
+	
+	/**
+	 * 
 	 * gets the depth of relationship between the ArrayList<RelatedWord> word
 	 * to the list of known_words in the database
 	 * 
@@ -209,6 +273,7 @@ public abstract class ReinforcementLearning {
 	 * @throws JWNLException
 	 */
 	public ArrayList<ArrayList<Policy>> getDepthOfWord(ArrayList<RelatedWord> word) throws JWNLException {
+		
 		
 		helper = new JwnlHelper();
 		
@@ -227,24 +292,31 @@ public abstract class ReinforcementLearning {
 				type = helper.identifyPointerType(w.getTag());
 				ArrayList<RelatedWord> kWords = iterateInDb(helper.getPOS(w.getTag()));
 				Iterator<RelatedWord> i2 = kWords.iterator();
+				
+				System.out.println("================Relatedness====================");
+				
 				while(i2.hasNext()) {
 					RelatedWord w2 = i2.next();
-					IndexWord _w = helper.convertToIndexWord(w);
-					IndexWord _w2 = helper.convertToIndexWord(w2);
+					//IndexWord _w = helper.convertToIndexWord(w);
+					//IndexWord _w2 = helper.convertToIndexWord(w2);
 					Policy _p = new Policy();
 					
 					try {
-						Relationship r = helper.getDepthOfRelationship(_w.getSenses(), _w2.getSenses(), type);
-					
+						//Relationship r = helper.getDepthOfRelationship(_w.getSenses(), _w2.getSenses(), type);
+						
+						double r = getPercentageRelativity(w.getLabel(),w2.getLabel());
+						printPercentRelatedNess(w.getLabel(), w2.getId(), w2.getLabel(), r);
 						_p.setInitState(w);
 						_p.setEndState(w2);
 					
-						_p.setReward(r.getDepth());
+						_p.setReward(r);
 					} catch(Exception e) {
 						RelatedWord word1 = new RelatedWord();
 						RelatedWord word2 = new RelatedWord();
+						word1.setId("");
 						word1.setLabel("");
 						word1.setTag(POS.VERB);
+						word2.setId("");
 						word2.setLabel("");
 						word2.setTag(POS.VERB);
 						_p.setReward(-1);
@@ -255,6 +327,7 @@ public abstract class ReinforcementLearning {
 					p.add(_p);
 				}
 				
+				System.out.println("=================End=====================");
 				listPolicy.add(p);
 			}
 		} catch (SQLException e) {

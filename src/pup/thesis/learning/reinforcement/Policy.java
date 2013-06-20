@@ -7,15 +7,15 @@ public class Policy {
 	private RelatedWord initState;
 	private RelatedWord endState;
 	private int action;
-	private int reward;
+	private double reward;
 	
 	
 	
-	public int getReward() {
+	public double getReward() {
 		return reward;
 	}
 
-	public void setReward(int reward) {
+	public void setReward(double reward) {
 		this.reward = reward;
 	}
 

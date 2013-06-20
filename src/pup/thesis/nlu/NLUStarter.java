@@ -9,6 +9,7 @@ import org.mvel2.sh.command.basic.Help;
 import net.didion.jwnl.JWNLException;
 import net.didion.jwnl.data.POS;
 
+import pup.thesis.helper.JwnlHelper;
 import pup.thesis.learning.reinforcement.Policy;
 import pup.thesis.server.DietfixServer;
 import edu.stanford.nlp.trees.Tree;
@@ -21,7 +22,7 @@ public class NLUStarter {
 	
 	public static void main(String args[]) {
 		NLUStarter start = new NLUStarter();
-		start.startNLUModule("What to eat if I am losing blood?");
+		start.startNLUModule("should I walk?");
 	}
 	
 	/**
@@ -49,6 +50,34 @@ public class NLUStarter {
 			System.out.println(w.getLabel() + " : " + w.getTag());
 		}
 		System.out.println("===========================================");
+	}
+	
+	public void printPercentageRelated(ArrayList<RelatedWord> w1) {
+		Iterator<RelatedWord> i = w1.iterator();
+		JwnlHelper help = new JwnlHelper();
+		ArrayList<ArrayList<Policy>> policy;
+		while(i.hasNext()) {
+			RelatedWord word = i.next();
+			POS pos = word.getTag();
+			String _pos = help.getPOS(pos);
+			try {
+				ArrayList<RelatedWord> w2 = DietfixServer.getWordSynonym().iterateInDb(_pos);
+				Iterator<RelatedWord> i2 = w2.iterator();
+				
+				while(i2.hasNext()) {
+				
+					RelatedWord word2 = i2.next();
+					String pos1 = help.getPOS(word.getTag());
+					String pos2 = help.getPOS(word2.getTag());
+					pos1 = help.getPOSWS4J(pos1);
+					pos2 = help.getPOSWS4J(pos2);
+					System.out.println(word.getLabel() + " - " + word2.getLabel() + " = " + DietfixServer.getWordSynonym().getPercentageRelativity(word.getLabel(), word2.getLabel()));
+				}
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 	}
 	
 	/**
@@ -112,7 +141,6 @@ public class NLUStarter {
 	 * @return
 	 */
 	public ArrayList<RelatedWord> startNoiseDetection(ArrayList<String> lemma, ArrayList<String> tag) {
-		
 		System.out.println("========================Removal=of=Noise=Words=========================\n\n");
 		System.out.println("Removing noise words...");
 		System.out.println("Removal of noise words: ");

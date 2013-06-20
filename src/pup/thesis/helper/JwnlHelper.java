@@ -22,6 +22,8 @@ import pup.thesis.nlu.RelatedWord;
 
 import com.mysql.jdbc.log.Log;
 
+import edu.cmu.lti.lexical_db.NictWordNet;
+
 public class JwnlHelper {
 	
 	private Dictionary wordnet;
@@ -62,13 +64,12 @@ public class JwnlHelper {
 		
 		for(int x = 0; x < first.length; x++) {
 			for(int y = 0; y < second.length; y++) {
+				if(y == 12) continue;
 				RelationshipList list = RelationshipFinder.getInstance().findRelationships(first[x], second[y], type);
 				
 				if(!list.isEmpty()) {
 					return (Relationship) list.get(0);
 				}
-				
-				
 			}
 		}
 		
@@ -319,14 +320,47 @@ public class JwnlHelper {
 		
 		if (pos.contains("VB")) {
 			return POS.VERB;
-		} else if (pos.contains("JJ")) {
+		} 
+		else if (pos.contains("JJ")) {
 			return POS.ADJECTIVE;
-		} else if (pos.contains("RB")) {
-			return POS.ADVERB;
-		} else if (pos.contains("NN")) {
-			return POS.NOUN;
-		}
+		} 
+//		else if (pos.contains("RB")) {
+//			return POS.ADVERB;
+//		} 
+//		else if (pos.contains("NN")) {
+//			return POS.NOUN;
+//		}
 		//oooops! that's an alien pos. XD
+		return null;
+	}
+	
+	/**
+	 * 
+	 * @param pos
+	 * @return
+	 */
+	public String getPOSWS4J(String pos) {
+		
+		if(pos.equalsIgnoreCase("vb")) {
+			return "v";
+		}
+		else if(pos.equalsIgnoreCase("nn")) {
+			return "n";
+		}
+		else if(pos.equalsIgnoreCase("jj")) {
+			return "a";
+		}
+		else if(pos.equalsIgnoreCase("rb")) {
+			return "r";
+		}
+		
+		return null;
+	}
+	
+	public edu.cmu.lti.jawjaw.pobj.POS getPOSWS4J(POS pos) {
+		if(pos.equals(POS.VERB)) {
+			return edu.cmu.lti.jawjaw.pobj.POS.v;
+		}
 		return null;
 	}
 }
